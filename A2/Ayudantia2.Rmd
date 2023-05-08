@@ -1,0 +1,97 @@
+---
+title: "Introducción a las probabilidades (parte II)"     
+authors : "Gaspar Catalán e Ivania Guzmán"
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Unión de eventos
+<span style="font-size: 20px;"> a. Probabilidad de la Unión para eventos ***NO*** mutuamente excluyentes </span>
+
+$P(A  \cup  B) = P(A) + P(B) - P(A \cap B )$
+
+recordar que $ P(A \cap B )$ por que si se ve en un diagrama de Venn existe una sección de que ambos ocurran como se ve en la siguiente imagen :
+
+![](ven_ex1.png){width=300px height=200px }
+<br>
+<br>
+
+<span style="font-size: 20px;"> b. Probabilidad de la Unión para eventos mutuamente excluyentes</span>
+
+
+$P(A  \cup  B) = P(A) + P(B)$
+
+En este caso sería un diagrama del siguiente estilo : 
+
+![](venn_ex2.png){width=300px height=200px }
+
+<br>
+<br>
+<span style="font-size: 20px;"> b. Probabilidad de la Unión para tres eventos mutuamente excluyentes </span>
+
+
+
+
+$P(A \cup B \cup C ) = P(A) + P(B) + P(C) - P(A \cap B) - P(A\cap C ) - P(B \cap C)  + P(A \cap B \cap C)$
+<br>
+<br>
+<span style="font-size: 20px;"> c.Probabilidad condicional </span>
+
+
+
+
+$P(A|B) = \frac{P(A \cap B)}{P(B)}$
+
+
+
+
+Esto se puede leer como "Probabilidad de que ocurra A dado que ocurrió B"
+
+Ejemplo 
+
+En un curso de estadistica, la probabilidad de que un alumno estudie materia es de un 75%
+y la probabilidad de que practique código en R de un 60%. Además se sabe que la probabilidad
+de que estudie teoría y practique código es de un 33%. Entonces,¿Cuál es la probabilidad de que
+practique código dado que estudio teoría?
+
+```{r, echo=TRUE}
+#Consideraremos A como  la probabilidad de que estudie teoría, y B que practique código
+#Y se quiere calcular la probabilidad de que ocurra B dado que ocurrio A. Osea
+#P(B|A) = P(A^B) /P (A)
+p_A = 0.75
+p_B = 0.60
+aYb = 0.33
+pCond = aYb/ p_A
+pCond
+
+
+```
+
+# Intersección de eventos.
+## Reglas
+<span style="font-size: 20px;"> Regla de la multiplicación </span>
+
+$P(A \cap B) = P(B|A) P(A) = \frac{P(A\cap B)}{P(A)} P(A)$   <br>
+
+o también <br>
+
+$P(A \cap B) = P(A|B) P(B) = \frac{P(A\cap B)}{P(B)} P(B)$
+
+
+# Independencia.
+
+
+
+
+# Introducción al Teoremas de Bayes.
+
+
+# Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.

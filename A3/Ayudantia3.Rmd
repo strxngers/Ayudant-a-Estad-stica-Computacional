@@ -1,0 +1,24 @@
+---
+title: "Técnicas Conteo"
+author: "Gaspar Catalán"
+date: '2023-05-06'
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Técnicas de Conteo
+
+## Permutaciones
+
+## Combinaciones
+
+
+# Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.

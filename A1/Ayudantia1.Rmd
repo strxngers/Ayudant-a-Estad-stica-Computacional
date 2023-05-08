@@ -1,0 +1,112 @@
+---
+title:     "Introducción a las probabilidades (parte I) "
+authors : "Gaspar Catalán" 
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# ***Conceptos Básicos de Probabilidades***
+
+## _1.Experimentos Aleatorios_
+<span style="font-size: 20px;"> Definición :  </span>
+
+Según Montgomery y Runger (2018); "Un experimento aleatorio es aquel que puede tener diferentes resultados, aunque se repita de la misma manera cada vez que se realiza" (p. 18).
+
+## _2.Espacio Muestral_
+<span style="font-size: 20px;"> Definición :  </span>
+
+Según Montgomery y Runger (2018) "La colección de todos los posibles resultados de un experimento aleatorio se llama espacio muestral del experimento. El espacio muestral se denota como ***S*** ." (p.20)
+
+Este puede ser continuo o discreto. Dos ejemplos rápido para contrastar. Para el continuo puede ser el peso corporal de los pacientes de un hospital. Y discreto las caras de un dado.
+
+## _3.Eventos_
+<span style="font-size: 20px;"> Definición :  </span>
+
+Según Montgomery y Runger (2018) "Un evento es un subconjunto del espacio muestral de un experimento aleatorio." (p.21)
+
+
+
+
+## Ejemplos 
+
+1 ) Lanzar una moneda  donde su espacio muestral es :
+
+ $\Omega$ = {Cara, Sello} 
+ 
+ Para el lanzamiento de dos monedas un evento podría ser que "las monedas caigan del mismo lado",
+ donde el espacio muestral es:
+ 
+ ***S*** = {Cara Cara, Cara Sello, Sello Cara , Sello Sello}
+ 
+ pero el evento que nos interesa es el subconjunto : 
+ 
+ ***E*** = {Cara Cara, Sello Sello}
+ 
+ 
+ ![](flip_coin.jpg){width=300px height=200px }
+
+
+2 ) Lanzamiento de un dado de 6 caras  donde su espacio muestral es :
+
+ $\Omega$ = {1, 2, 3, 4, 5, 6} 
+ 
+ Para este ejemplo un evento podría ser que "que resulte una número impar",
+ donde el subconjunto de interés es:
+ ***E*** =  {1,3,5} 
+
+![](dado.jpg){ width=300px height=200px }
+
+# ***Interpretación Axiomas de Probabilidades***
+
+
+##  _1.Resultados igualmente probables o equiprobables_
+<span style="font-size: 20px;"> Definición :  </span>
+
+"Cuando un espacio muestral consiste en N posibles resultados que son igualmente probables, la probabilidad de cada resultado es 1/N." Montgomery(2018, p.27) 
+
+Un ejemplo es para un dado de 6 caras ***NO*** cargado, donde cada una de sus caras tiene _P(x) = $\frac{1}{6}$_ , considerando que x $\in$ $\Omega$ .
+
+
+## _2.Probablilidad de un evento_
+ <span style="font-size: 20px;"> Definición :  </span>
+ 
+"Para un espacio muestral discreto, la probabilidad de un evento ***E***, representada como _P(E)_, es igual a la suma de las probabilidades de los resultados en ***E***." Montgomery(2018, p.28)
+
+Un ejemplo es el del dado donde sabemos que su espacio muestral está contemplado por : 
+
+$\Omega$ = {1, 2, 3, 4, 5, 6} 
+
+ Y un evento podría ser que "que resulte una número impar",
+ donde el subconjunto es:
+ 
+ ***E*** =  {1,3,5} 
+ 
+ Ahora sabiendo que la probabilidad de cada cara es de $\frac{1}{6}$ entonces,
+ 
+ _P(E) = $\frac{1}{6} \times 3 = \frac{3}{6} = \frac{1}{2}$_
+
+## _3.Axiomas de probabilidad _
+ <span style="font-size: 20px;"> Definición :  </span>
+ 
+ "La probabilidad es un número que se asigna a cada miembro de una colección de eventos de un experimento aleatorio que cumple con las siguientes propiedades:
+ 
+ (a) _P(S) = 1_ donde **S** es el espacio muestral.
+ 
+ (b) $0 \geq P(E) \geq 1$ para cualquier evento ***E***
+ 
+ (c) Para dos eventos $E_1$ y $E_2$  con $E_1 \cap E_2 =\emptyset$
+  $P(E_1 \cup E_2) = P(E_1) + P(E_2)$
+                                      "
+
+
+
+# Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.
+
+
