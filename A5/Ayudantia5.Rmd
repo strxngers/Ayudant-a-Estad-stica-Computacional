@@ -1,0 +1,124 @@
+---
+title: "Variables aleatorias discretas y distribuciones de probabilidad parte 1.2"
+author: "Ivania Elena Guzmán Madriaga"
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+<style>
+  h1, h2, h3, h4, h5, h6 {
+    color: blueviolet;
+  }
+</style>
+
+## Variable aleatoria continua
+
+Las variables aleatorias continuas son variables aleatorias cuyo intervalo de
+valores es incontable.
+
+## 1.Distribuciones de probabilidad
+
+Una distribución de probabilidad de una variable continua es una función que asigna
+a cada suceso definido sobre la variable la probabilidad de que dicho suceso ocurra.
+
+## 2.Funciones de densidad (o masa) de probabilidad
+
+La  <span style="color:blueviolet">función de densidad de probabildad f(x)</span> de una variable aleatoria continua es utilizada para determinar la probabilidad de que la variable aleatoria tome valores de un intervalo continuo. La probabilidad de que la variable aleatoria tome un 
+valor en un intervalo se puede calcular como el área bajo la curva de la función 
+de densidada correspondiente a ese intervalo. 
+
+La función de densidad de probabilidad cumple con las siguientes probabilidaes:
+
+(1) $$ f(x_i) \geq 0$$
+(2) $$ \int_{-\infty}^{\infty} f(x) dx = 1 $$
+
+(3) $$ f(a \leq X \leq b ) = \int_{a}^{b} f(x)dx $$ 
+(4) $$ P(X = x) = 0 $$
+
+## 3.Función de distribución acumulada
+
+Es una función que mide la probabilidad acumulada de que la variable aleatoria tome valores menores o iguales que un valor dado.
+
+Puede ser denotada como:
+
+(1) $$ F(x) = P(X \leq x) = \int_{-\infty}^{\infty} f(u)du $$
+(2) $$ f(x) = dF(x)/dx $$
+
+## 4.Media y varianza de una variable aleatoria continua.
+
+Para una <span style="color:blueviolet">función de probabildad</span> se pueden calcular las
+siguientes métricas:
+
+<span style="color:blueviolet">Media o valor esperado</span>
+$$ \mu = E(x) = \int_{-\infty}^{\infty}xf(x)dx $$
+
+<span style="color:blueviolet">Varianza</span>
+$$ \sigma^2 = V(X) = \int_{-\infty}^{\infty}(x - \mu)^2f(x)dx = \int_{-\infty}^{\infty}x^2f(x)dx - \mu^2$$
+
+<span style="color:blueviolet">Desviación estándar</span>
+$$\sigma = \sqrt{\sigma^2}$$
+
+## 5.Ejercicio 
+
+La vida, en horas, de cierto tipo de lámparas varía aleatoriamente según la siguiente función de densidad:
+
+$$ f(x) =
+\begin{cases}
+k/x^2 & \text{si } x \geq 100 \text{ hs} \\
+0 & \text{si } x < 100 \text{ hs }\\
+\end{cases} $$
+
+(a) Encuentre el valor de k para la función de densidad dada.
+
+(b) ¿Cuál es la probabilidad de que una lámpara de este tipo tenga una vida útil mayor a 200 horas?
+
+(c) Cierto artefacto tiene tres de estas lámparas, ¿cuál es la probabilidad de que las tres lámparas duren más de 200 horas?
+
+### Respuestas
+
+(a) Para esta pregunta, X: tiempo de vida de un cierto tipo de lámparas medido en horas.
+
+Por ende, las funciones de densidad deben cumplir que el área bajo de la curva en todo el recorrido de la variable es igual a 1, entonces: 
+
+$$ \int_{100}^{\infty}\frac{k}{x^2}dx = k \int_{100}^{\infty}\frac{1}{x^2}dx$$
+$$ k\cdot\left[\frac{x^-1}{-1}\right]_{100}^{\infty}= k \cdot \left[ \lim_{x \to \infty} \left( \frac{-1}{x} \right) - \left( \frac{-1}{100} \right) \right] = \frac{k}{100} $$ 
+
+Con la integral ya resulta, despejamos k
+
+$$ \frac{k}{100} = 1\\
+k= 100 $$
+Y obtenemos que k = 100
+
+
+(b) La probabilidad de que una lámpara de este tipo tenga una vida útil mayor a 200 horas, sabemos que esto es 1 - la probabilidad e que sea menor o igual a 200 y esto se puede calcular integrando la función de densidad desde 200 hasta infinito:
+
+$$P(X > 200) = 1 - P(X \leq 200)$$
+
+Como calculamos en (a), para la función de densidad dada k = 100, entonces reemplazamos
+
+$$P(X \leq 200) = \int_{100}^{200}\frac{100}{x^2}dx = 0.5\\
+P(X > 200) = 0.5 $$
+Por lo tanto, la probabilidad de que la lámpara tenga una vida útil mayor a 200 horas es 50%
+
+(c) Si tenemos un artefacto que utiliza 3 lamparas, para calcular la probabilidad de que las 3 lamparas funciones después de 200 horas, tenemos que definir una nueva variable y, donde:
+
+y: cantidad de lamparas que funcionan de un total de 3.
+
+Esa variable sería una variable binomial con n=3 y p=0,5. 
+
+La probabilidad buscada es P(Y=3):
+
+```{r}
+n = 3
+k = 3
+p = 0.5
+combi = (factorial(n) / (factorial(k) * factorial(n - k))) # Calculamos la combinatoria utilizando la fórmula matemática
+
+p3 = combi * p^n* p^(n-k)
+p3
+```
+
+## Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.
