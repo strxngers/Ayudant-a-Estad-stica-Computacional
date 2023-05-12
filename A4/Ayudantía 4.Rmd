@@ -1,0 +1,108 @@
+---
+title: "Variables aleatorias discretas y distribuciones de probabilidad parte 1.1"
+author: "Ivania Elena Guzmán Madriaga"
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+<style>
+  h1, h2, h3, h4, h5, h6 {
+    color: blueviolet;
+  }
+</style>
+
+## Variable aleatoria discreta
+
+Las variables aleatorias discretas son variables aleatorias cuyo intervalo de
+valores es finito o contablemente infinito.
+
+## 1.Distribuciones de probabilidad
+
+Una distribución de probabilidad describe como se distribuye una variable aleatoria 
+en un conjunto de valores potenciales, donde también encontramos el caso en el que 
+la variable tome un valor determinado. En otras palabras, es una función que asigna 
+a cada suceso definido sobre la variable la probabilidad de que el suceso ocurra.
+
+
+### Ejemplo
+
+Supongamos que la probabilidad de que un estudiante apruebe un examen de lenguaje es de 0.6. 
+¿Cuál es la probabilidad de que exactamente 3 alumnos aprueben?
+```{r}
+#  Si la probabilidad de que al dar el examen un estudiante aprueben es 0.6, para 3 es
+prob = 0.6*0.6*0.6
+prob
+```
+## 2.Funciones de densidad (o masa) de probabilidad
+
+La  <span style="color:blueviolet">función de densidad de probabildad f(x)</span> mide la probabilidad de que la variable aleatoria tome valores específicos, es decir, asigna 
+a cada valor posible que pueda tomar la variable su probabilidad. 
+Se puede representar mediante una tabla o una o función de masa probabilidad.
+
+La función de densidad de probabilidad cumple con las siguientes probabilidaes:
+
+(1) $$ f(x_i) \geq 0$$
+(2) $$ \sum\limits_{i=1}^{n} f(x_i) = 1 $$
+(3) $$ f(x_i) = P(X = x_i) $$ 
+
+## 3.Función de distribución acumulada
+
+Es un método alternativo para describir la distribución de probabilidad de una 
+variable aleatoria es mediante probabilidades acumuladas como P(X ≤ x). Además, 
+las probabilidades acumuladas se pueden usar para encontrar la función de densidad (o masa)
+de probabilidad de una variable aleatoria discreta.
+
+Puede ser denotada como:
+
+(1) $$ F(x) = P(X \leq x) = \sum_{x_i \leq x} f(x_i) $$
+(2) $$0 \leq F(x) \leq 1$$
+(3) $$ Si \qquad x\leq y, F(x) \leq F(y)$$
+
+## 4.Media y varianza de una variable aleatoria discreta.
+
+Para una <span style="color:blueviolet">función de probabildad</span> se pueden calcular las
+siguientes métricas:
+
+<span style="color:blueviolet">Media o valor esperado</span>
+$$ \mu = E(x) = \sum_{x} f(x_i) $$
+
+<span style="color:blueviolet">Varianza</span>
+$$ \sigma^2 = V(X) = E(X - \mu)^2 = \sum_{x}(X - \mu)^2f(X) = \sum_{x}X^2f(X) - \mu^2$$
+<span style="color:blueviolet">Desviación estándar</span>
+$$\sigma = \sqrt{\sigma^2}$$
+
+## 5.Ejercicio resuelto
+
+La siguiente tabla muestra la distribución de probabilidad del número de tareas que un empleado puede completar en un día de trabajo en una empresa.
+
+
+| N° tareas completadas | Probabilidad |
+|----|-----------|
+|  0 |      0.05 |
+|  1 |      0.15 |
+|  2 |      0.30 |
+|  3 |      0.35 |
+|  4 |      0.10 |
+|  5 |      0.05 |
+
+```{r}
+# Definición
+# Creamos vectores que contengan la info
+num_tareas <- c(0, 1, 2, 3, 4, 5)
+prob <- c(0.05, 0.15, 0.30, 0.35, 0.10, 0.05)
+# Creamos el data frame
+data <- data.frame("Numero de tareas completadas" = num_tareas,"Probabilidad" = prob)
+
+# Promedio
+prom = sum(prob*num_tareas)
+varianza = sum(num_tareas^2*prob) - prom^2
+desviacion = sqrt(varianza)
+prom
+varianza
+desviacion
+```
+
+## Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.
