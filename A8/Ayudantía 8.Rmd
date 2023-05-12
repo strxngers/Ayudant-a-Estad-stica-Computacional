@@ -1,0 +1,271 @@
+---
+title: "Variables aleatorias continuas y distribuciones de probabilidad parte 3"
+author: "Ivania Elena Guzmán Madriaga"
+date: "2023-05-11"
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+<style>
+  h1, h2, h3, h4, h5, h6 {
+    color: blueviolet;
+  }
+</style>
+
+## 1. Distribución exponencial
+
+La variable aleatoria X que es igual a la distancia entre eventos sucesivos de un proceso de Poisson con un número medio de eventos λ > 0 por unidad de intervalo es una variable aleatoria exponencial con parámetro λ. A partir de ello, se puede definir:
+
+(a)  $$ f(x) =
+\begin{cases}
+\lambda e^{-\lambda x}
+ & \text{si } x > 0\\
+0 & \text{si } x \leq 0\\
+\end{cases} $$
+
+(b)  $$ P(x \leq x) =
+\begin{cases}
+1- \lambda e^{-\lambda x}
+ & \text{si } x > 0\\
+0 & \text{si } x \leq 0\\
+\end{cases} $$
+
+<span style="color:blueviolet">Media y varianza:</span>
+
+$$ \mu = E(x) = \frac{1}{\lambda} \\ 
+\sigma^2 = V(x) = \frac{1}{\lambda^2}$$
+
+
+### Ejercicio
+
+El tiempo de vida de una lámpara especial sigue una distribución exponencial con media 100 hs.
+
+a) ¿Cuál es la probabilidad de que una lámpara dure por lo menos 30 horas?
+
+<span style="color:blueviolet">Respuesta:</span>
+
+Utilizamos x: tiempo de vida de una de las lámparas especiales
+
+Como ya sabemos, la esperanza de una variable exponencial es E(X)=1/λ, dado que la esperanza es 100, obtenemos que λ=1/100
+
+$$ P(x>30) = 1-P(x \leq 30) = 1 - (1-e^{-\frac{30}{100}}) = e^{-\frac{30}{100}} = 0.7408 $$
+
+Para hacer este cálculo utilizando r, podemos utilizar la función de distribución acumulada de la distribución exponencial. Esta función toma como argumentos el valor para el cual se desea calcular la función de distribución acumulada y los parámetros de la distribución exponencial, como su tasa de decaimiento (o inversa de la media).
+
+```{r}
+# a) Probabilidad de que una lámpara dure por lo menos 30 horas
+pa <- 1 - dexp(30, rate = 1/100)
+pa 
+```
+b) Si una lámpara ya lleva 50 horas de uso, ¿cuál es la probabilidad de que dure más de 80 horas?
+
+<span style="color:blueviolet">Respuesta:</span>
+
+Si conocemos <span style="color:blueviolet">La propiedad de falta de memoria o Lack of memory</span>, este ejercicio es directo. Esta propiedad indica que la probabilidad de que una bariale aleatoria exponencial X sea menor que la suma de los dos valores t1 y t2, dado que X es mayor que t1, es igual a la probabilidad de que X sea menor que t2.
+
+Como nos piden que tengamos: 
+$$ P(x>80 | x>50) $$
+obtenemos que la diferencia entre ambas es $$ P(x>30) $$, la respuesta es la misma que en la pregunta a).
+
+c) Se seleccionan cinco lámparas, ¿Cuál es el número esperado de lámparas que duran por lo menos 30 hs (considerando las 5)?
+
+<span style="color:blueviolet">Respuesta:</span>
+
+Para calcular el número esperado de lámparas que duran por lo menos 30 horas, podemos multiplicar la probabilidad de que una lámpara dure por lo menos 30 horas (calculada en el apartado a)) por el número total de lámparas (que es 5 en este caso). Entonces, el número esperado de lámparas que duran por lo menos 30 horas es
+
+```{r}
+pa <- 1 - pexp(30, rate = 1/100)
+# c) Número esperado de lámparas que duran por lo menos 30 hs (considerando las 5)
+n_c <- 5 * pa
+n_c
+
+```
+
+## 2. Distribución de Erlang y Gamma
+
+Una variable aleatoria exponencial describe el tiempo hasta que se obtiene el primer evento en un proceso de Poisson. Una generalización de la distribución exponencial es el tiempo hasta que se producen r eventos en un proceso de Poisson.
+
+En la cual:
+
+$$f(x) = \begin{cases}
+          \frac{\lambda^r x^{r-1} e^{-\lambda x}}{(r-1)!}, & \text{si } x > 0 \\
+          0, & \text{si } x \leq 0
+         \end{cases}$$
+
+Para asignar un valor positivo a r, podemos definir la distribución gamma como:
+
+$$f(x) = \begin{cases}
+          \frac{\lambda^r x^{r-1} e^{-\lambda x}}{\Gamma(x)}, & \text{si } x > 0 \\
+          0, & \text{si } x \leq 0
+         \end{cases}$$
+
+Siendo:
+
+$$\Gamma(x) = \int_{0}^{\infty} x^{r-1} e^{-x} dx, \text{para } r > 0$$
+
+<span style="color:blueviolet">Media y varianza:</span>
+
+$$\mu = E(x) = \frac{r}{\lambda}$$
+
+$$\sigma^2 = V(x) = \frac{r}{\lambda^2}$$
+
+### Ejercicio
+
+Un computador defectuoso presenta fallas en alguno de sus componentes cada 3 horas,
+
+a) ¿Cuál es el tiempo promedio que transcurre hasta que fallen 4 componentes?
+
+<span style="color:blueviolet">Respuesta:</span> 
+
+Como nos preguntan cuando fallan 4 componentes, tenemos r = 4, y como deja de funcionar un componente cada 3 horas, lambda = 1/3
+
+```{r}
+# tiempo medio= r/lambda
+r = 4
+lambda = 1/3
+respuesta1 = r/lambda
+respuesta1
+```
+b) ¿Cuál es la probabilidad de que transcurran 15 horas antes de que fallen los 4 componenetes?
+
+<span style="color:blueviolet">Respuesta:</span> 
+
+
+```{r}
+respuesta2 = 1 - pgamma(15,shape = r,scale = 1/lambda)
+respuesta2
+```
+La probabilidad es baja, al comparar con la cantidad de horas promedio que se espera que transcurran antes de que fallen 4 componentes, podemos intuitivamente pensar que es poco probable que los componentes funcionen 3 horas más.
+
+
+## 3. Distribución de Weibull
+
+La distribución de Weibull se utiliza a menudo para modelar el tiempo hasta la falla de muchos sistemas físicos diferentes. Los parámetros en la distribución proporcionan una gran cantidad de flexibilidad para modelar sistemas en los que el número de fallas aumenta con el tiempo (desgaste de rodamientos), disminuye con el tiempo (algunos semiconductores) o permanece constante con el tiempo (fallas causadas por golpes externos al sistema).
+
+$$ f(x) = \frac{\beta}{\delta} (\frac{x}{\delta})e^{-\left(\frac{x}{\delta}\right)^\beta} , \text{para } x> 0$$
+Con parámetros de escala $$\delta > 0  \text{ y forma } \beta >0$$
+
+Su función de distribución acumulada es:
+
+$$F(x) = 1 - e^{-\left(\frac{x}{\delta}\right)^\beta}$$
+<span style="color:blueviolet">La media y la varianza de una variable aleatoria Weibull son:</span>
+
+$$\mu = E(x) = \delta \Gamma\left(1+\frac{1}{\beta}\right)$$
+
+$$ \sigma^2 = V(x) = \delta^2 \Gamma (1 + \frac{1}{\beta}) - \sigma^2[\Gamma(1+\frac{1}{\beta})]$$
+
+### Ejercicio
+
+El tiempo hasta el fallo (en horas) de un rodamiento en un eje mecánico se modela satisfactoriamente como una variable aleatoria Weibull con β = 1/2 y δ = 5000 horas. Determina el tiempo medio hasta el fallo.
+
+<span style="color:blueviolet">Respuesta:</span> 
+
+
+```{r}
+delta = 5000
+beta = 1/2
+# el tiempo medio corresponde delta * Γ(1 + 1/beta)
+# Cuando tenemos que calcular Gamma (Γ) debemos saber que cuando r = 1 + 1/beta es un número entero, se calcula como (r-1)! 
+media = delta * factorial((1 + 1/beta) - 1)
+media
+
+```
+Determine la probabilidad de que un cojinete dure al menos 6000 horas.
+
+Ya que estamos calculando la función de supervivencia, utilizamos la función pweibull
+```{r}
+#
+resp = pweibull(6000, shape = beta, scale = delta, lower.tail = FALSE)
+resp
+```
+Por lo tanto la probabilidad es de 33%
+
+<span style="color:blueviolet">Respuesta:</span> 
+
+## 4. Distribución lognormal
+
+Sea W una distribución normal con media θ y varianza ω^2; entonces X=exp(W) es una variable aleatoria lognormal con función de densidad de probabilidad
+
+$$ f(x) = \frac{1}{x\omega \sqrt{2\pi}} e^{-(\frac{\ln(x) - \theta^2}{2\omega^2)}} $$
+
+<span style="color:blueviolet">Media y varianza:</span> 
+
+$$ \mu = E(X) = e^{\theta + \frac{\omega^2}{2}} $$
+$$ \sigma^2 = V(X) = e^{2\theta + w^2}(e^{w^2}-1) $$
+
+### Ejercicio
+
+La vida útil (en horas) de la batería de una tablet de una marca determinada, tiene una distribución lognormal con θ = 20 y ω = 2,5.
+¿Cuál es la probabilidad de que la vida útil exceda las 20000 horas?
+
+<span style="color:blueviolet">Respuesta:</span> 
+
+```{r}
+w=2.5 
+omega=20
+resultado1=1-plnorm(20000,omega,w)
+print(resultado1) 
+```
+
+## 5. Distribución beta
+
+La distribución Beta tiene es una familia de distribuciones de probabilidad definida en el intervalo [0,1], por ende, tiene la siguiente función de densidad:
+
+$$ f(x) = \frac{\Gamma(\alpha + \beta)}{\Gamma(\alpha) + \Gamma(\beta)}x^{\alpha - 1}(1-x)^{\beta - 1} \text{ para x en [0,1]} $$
+<span style="color:blueviolet">Media y varianza:</span> 
+
+$$ \mu = E(X) = \frac{\alpha}{\alpha + \beta} $$
+
+$$\sigma^2  = V(x) \frac{\alpha\beta}{(\alpha + \beta)^2(\alpha + \beta + 1)} $$
+
+### Ejercicio
+
+Un distribuidor mayorista de gasolina tiene tanques de almacenamiento de gran capacidad con un abastecimiento fijo, los cuales se llenan cada lunes. Él, desea saber el porcentaje de gasolina vendido durante la semana.
+
+Después de varias semanas de observación, el mayorista descubre que este porcentaje podría describirse mediante una distribución beta con α=4 y β=2
+
+Calcule la probabilidad de que venda:
+
+a) Al menos, el 90% de sus existencias en una semana.
+
+<span style="color:blueviolet">Respuesta:</span> 
+
+Sabemos que la variable aleatoria es X: ventas de gasolina durante la semana.
+
+Debemos saber P(X>0.9), para esto utilizamos la funcion pbeta.
+
+```{r}
+prob = pbeta(0.9, 4, 2, lower.tail = F)
+prob
+```
+
+Obtenemos que la probabilidad de que venda al enos el 90% de la gasolina en esta semana es de 0.08146, lo que nos indica que la probabilidad de que esto ocurra es muy baja.
+
+b) Menos del 50% de sus existencias en una semana.
+<span style="color:blueviolet">Respuesta:</span> 
+
+```{r}
+prob2 = pbeta(0.5, 4, 2, lower.tail = T)
+prob2
+```
+
+
+## Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.
+  
+  [2] Fede. (2018b, julio 25). Distribución exponencial: Ejercicios Resueltos [¡Paso a paso!]. PROBA FÁCIL. https://probafacil.com/distribucion-exponencial-ejercicios-resueltos/
+
+
+
+
+
+
+
+
+
+
+
+
+

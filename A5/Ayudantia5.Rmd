@@ -122,3 +122,5 @@ p3
 
 ## Bibliografía
   [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.
+  
+  [2] Fede. (2018, 18 julio). Variable Aleatoria Continua - Ejercicios Resueltos - [Paso a Paso!]. PROBA FÁCIL. https://probafacil.com/variable-aleatoria-continua-ejercicios-resueltos/

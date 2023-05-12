@@ -1,0 +1,56 @@
+---
+title: "Variables aleatorias continuas y distribuciones de probabilidad parte 2"
+author: "Ivania Elena Guzmán Madriaga"
+date: "2023-05-10"
+output: 
+  html_document: 
+    theme: darkly
+    toc : true
+    toc_float : true
+---
+<style>
+  h1, h2, h3, h4, h5, h6 {
+    color: blueviolet;
+  }
+</style>
+
+## Distribución uniforme continua
+
+Es una distribución de probabilidad continua que se utiliza para modelar una variable aleatoria continua que puede tomar valores dentro de un intervalo finito con la misma probabilidad
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.
