@@ -1,0 +1,52 @@
+---
+title: "Distribución Uniforme Discreta "
+output: 
+  html_document:
+    theme: darkly
+  
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggpubr)
+library("extraDistr")
+```
+* ***PARA ESTA SECCIÓN ES NECESARIO TENER LA LIBRERIA extraDistr***
+
+El puesto de papas fritas "Faraona" puede generar al día entre $100 mil y 200 mil pesos en el dia, estas ganancias siguen una distribución uniforme discreta.
+
+- ¿ Probabilidad de que gane menos de $ 150 mil?
+
+
+- ¿ Probabilidad de que sea mayor o igual a 120 mil?
+
+<br>
+<br>
+<br>
+En la pregunta 1 se pide $P(X \leq 150 mil)$ y para lo cual es conveniente calcular la probabilidad acumulada, es decir, utilizar prefijo p :
+
+
+```{r, echo=TRUE}
+
+resultado1 = pdunif(q = 150, min =100, max = 200, lower.tail = FALSE )
+cat(paste("Y la probabilidad de que sea menor a 150 mil es de  ",resultado1))
+
+# No es 50% pero se acerca bastante
+
+
+```
+<br>
+<br>
+<br>
+En la pregunta 2 se pide $P(X \geq 120mil)$, para lo cual utilizaremos dunif:
+
+```{r, echo=TRUE}
+resultado2 = pdunif(q = 120, min =100, max = 200, lower.tail = FALSE )
+cat(paste("Y la probabilidad de que sea mayor o igual a 120 mil es de  ",resultado2))
+
+#Nuevamente, casi el 80%, planteo pregunta ¿A que se debe esto?
+
+```
+<br>
+<br>
+<br>

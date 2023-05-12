@@ -1,0 +1,47 @@
+---
+title: "Distribución de Binomial"
+output: 
+  html_document:
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rlab)
+```
+
+* ***IMPORTANTE*** : Tener la librería Rlab
+
+# Problema
+
+
+En una lotería se sortearon y ganaron 20 premios, el total de tickets jugados fueron  2000 ¿Cual es la posibilidad de que ganes un premio?¿Y la posibilidad de que ganen los miembros de tu familia?
+
+
+
+```{r, echo=TRUE}
+
+# Primero que nada debemos calcular la probabilidad de ganarse la loteria
+
+ganar <- 20/2000
+n <- 3 # Este es el tamaño de mi familia, para mi caso es 3, pero ustedes lo pueden cambiar como gusten
+
+
+
+yo <- dbinom(1,size =n, prob = ganar )
+
+familia <- dbinom (n, size = n, prob = ganar)
+
+```
+
+```{r, echo=FALSE}
+
+cat(paste("Probabilidad de que gane solo yo : ", yo))
+
+cat(paste("Probabilidad de que ganen todos en mi familia : ", familia))
+```
+
+
+
+
+

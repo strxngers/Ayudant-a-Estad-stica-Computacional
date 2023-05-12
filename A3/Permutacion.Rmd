@@ -1,0 +1,116 @@
+---
+title: "Permutaciones"
+output: 
+  html_document: 
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(combinat)
+```
+
+
+### Ejemplo 1 Permutaciones
+
+Se deben ordenar 3 lápices de color diferentes entre cada uno.
+
+Dependiendo de lo que se quiere, para efectos de este curso es mejor utilizar la fórmula permutation() o quizas una función en R que solo calcule la cantidad de formas a ordenar el conjunto.
+
+
+Si la pregunta es: ¿***De cuantas*** maneras se puede ordenar el conjunto de lápices?. En este caso se puede realizar los siguiente :
+
+```{r, echo=TRUE}
+permutacionTamanioN <- function(tamanio_poblacion){
+  return(factorial(tamanio_poblacion))
+}
+
+
+n <- 3
+total <- permutacionTamanioN(n)
+cat(paste("Se pueden hacer un tota de combinaciones igual a  : ",total))
+
+
+```
+
+
+Ahora si la pregunta fuese conseguir todas las formas de ordenar, de manera que se puedan ver, se puede recurrir a las siguientes funciones : 
+```{r, echo=TRUE}
+# Se utilzia la libreria combinat
+# Si no tienen esta libreria utilicen install.packages("combinat en la consola")
+lapices <-c("azul", "rojo", "verde")
+formas<-permn(lapices)
+
+for (i in 1:length(formas)) {
+  cat(paste(formas[i]), "\n")
+  
+}
+```
+***OBS : A veces si el volumen de los datos es muy grande, y se usa permn(), es probable que demore en generar todas las combinaciones, por lo cual sería más conveniente saber la cantidad de combinaciones. Aunque realmente depende de lo que se pida en el problema.***
+<br>
+<br>
+<br>
+
+
+### Ejemplo 2 Permutaciones de subconjuntos
+
+En un curso de 10 estudiantes se quiere elegir un presidente, un secratio y un tesorero¿De cuantás maneras se puede seleccionar ?
+
+```{r, echo=TRUE}
+#   Parametros:
+#     poblacion : tamaño total del conjunto dado, para el ejemplo es 10
+#     muestra   : tamaño del comité que se quiere 
+perm_subconj <- function(poblacion, muestra){
+  resultado <- factorial(poblacion)/factorial(poblacion-muestra)
+  return(resultado)
+}
+formas <- perm_subconj(10, 3)
+cat(paste("Se pueden conformar  " , formas, " directivas diferentes"))
+
+
+```
+<br>
+<br>
+<br>
+
+### Ejemplo 3 Permutaciones de objetos similares
+
+De cuantas maneras diferentes se puede ordenar las letras de la palabra "MATEMATICAS".
+
+
+
+SOL:
+Para este caso tenemos letras elemetos similares dentro de la palabra por lo tanto la fórmula de este caso es diferente.
+
+```{r, echo=TRUE}
+
+# ESTAS LINEAS DE CODIGO PROBABLEMENTE CONGELEN LA EJECUCIÓN DEL PROGRAMA AL HACER KNIT
+#Si quieres puedes descomentarlas y verlas por ti mismo, pero lo que pasa es que
+#Comienza a generar todas las combinaciones para está permutación
+#letras <-c("M", "A","T","E","M","A","T","I","C","A","S")
+#frec <- table(letras)
+#perms <-permn (11, freq = frec)
+#perms
+
+
+
+#Es por eso que preferiremos hacer los siguiente
+
+#El numerador tiene el total de letras y el denominador un factorial por cada letra
+# que tenga más de una ocurrencia, siendo el valor de este factorial la cantidad de veces que se repite esa letra. 
+#Para este caso 3 veces "A", 2 veces "M" y 2 veces "T"
+ 
+resultado = factorial(11)/(factorial(2)*factorial(2)*factorial(3))
+cat(paste( "El resultado es :" , resultado))
+
+```
+
+
+
+
+Les dejo propuesto que implemente una función para permutación con repetición o objetos similares, claro que solo para contabilizar la cantidad y no generar todas las combinaciones.
+
+
+
+# Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.

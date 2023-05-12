@@ -1,0 +1,56 @@
+---
+title: "Distribución de Poisson"
+output: 
+  html_document:
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rlab)
+```
+
+* ***IMPORTANTE*** : Tener la librería Rlab
+
+# Distribución de Poisson
+
+Enunciado :
+
+En un centro deportivo los atletas sufren de accidentes en una tasa de 1 lesión cada 3 semanas. ¿Cuál es la probabilidad de que la próxima semana dos atletas se lesionen?¿Cuál es la probabilidad de que la próxima semana a lo más tres atletas se lesionen?¿Y dentro de las siguientes 2 semanas que se lesionen 7 atletas?
+
+
+
+SOL : 
+
+```{r, echo=TRUE}
+#Pregunta 1
+x <- 2 # Dos accidentes en la siguiente semana
+lambda <- 1/3 # Corresponde a la media de accidentes para este caso es lesiones/semanas
+
+# Se quiere saber P(X = 2)
+
+resultado1 <- dpois(x, lambda = lambda)
+
+cat(paste("La probabilidad de que la siguiente semana se lesionen dos atletas es  "), resultado1)
+
+
+
+
+
+#Pregunta 2
+# Se quiere saber P(X <= 3)
+
+resultado2 <- ppois(3, lambda = lambda)
+
+cat(paste("La probabilidad de que la siguiente semana se lesionen a lo más 3 atletas es  "), resultado2)
+
+#Pregunta 3
+# Se quiere saber P(X <= 3), pero ahora son dos semnas por lo tanto lambda cambia
+lambda <- lambda * 2 # Multiplicado por dos que son las semanas 
+resultado3 <- ppois(3, lambda = lambda)
+
+cat(paste("La probabilidad de que la siguientes dos semanas se lesionen 3 atletas es"), resultado3)
+
+
+```
+

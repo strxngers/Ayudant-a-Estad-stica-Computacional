@@ -1,0 +1,52 @@
+---
+title: "Combinaciones"
+output: 
+  html_document:
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(combinat)
+
+```
+Aquí ***NO*** importa el orden . La librería ***combinat*** también tiene una función para _***generar***_ combinaciones, es decir, que si realmente queremos solo saber el total de combinaciones de una situación, no sería muy conveniente realizarlo con volúmenes de conjuntos muy grandes. Es por esto que a continuación está implementada una función que entrega el número de combinaciones a generar de una población tamaño n y muestra.
+
+```{r, echo=TRUE}
+mi_combinatoria <- function(n,r){
+    resultado = factorial(n)/(factorial(n-r)*factorial(r))
+    return(resultado)
+}
+
+```
+
+## Ejemplo
+
+Andy tiene 8 pantalones diferentes pero para un viaje solo puede llevar cuatro, ¿Cuáles son las posibles combinaciones para llevar en el viaje de Andy?
+
+```{r, echo=TRUE}
+pantalones <- c("A","B","C","D","E","F","G","H")
+
+
+#Utilizando la función implementada 
+
+resultado <- mi_combinatoria(length(pantalones), 4)
+
+resultado
+
+#Ahora con la función de la librería combinat
+resultado2 <- combn(pantalones, 4)
+resultado2
+
+#Algo burdo no? imagina que pasaría si aumentará el número de pantalones de Andy
+
+```
+
+
+
+
+
+
+
+# Bibliografía
+  [1] Montgomery, D. C., & Runger, G. C. (2018). Applied statistics and probability for engineers (7th ed.). Wiley.

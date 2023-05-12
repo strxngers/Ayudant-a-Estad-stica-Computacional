@@ -11,7 +11,7 @@
 
 
 
-<title>Técnicas Conteo</title>
+<title>Distribución de Poisson</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -379,47 +379,47 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Técnicas Conteo</h1>
+<h1 class="title toc-ignore">Distribución de Poisson</h1>
 
 </div>
 
 
-<p><strong><em>PUNTOS A CONSIDERAR :</em></strong> <br> (1) Tamaño de
-población n. <br> (2) Tamaño de muestra r. <br> (3) ¿Importa el orden?
-<br> (4) ¿Se puede repetir?</p>
-<p>EJEMPLO :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de un(a) presidente, un(a) vicepresidente, un(a)
-secretario(a) y un(a) tesorero(a).</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 4, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>SI</em></strong>, dado
-que no es lo mismo tener de presidente a Mónica, vicepresidente a
-Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente
-a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a
-Manuel. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.
-<br><br><br></p>
-<p>Otro caso podría ser :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de 3 integrantes.</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 3, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>NO</em></strong>, dado
-que no hay distinción de cargos o similares entre los 3 cargos del
-comité. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.</p>
-<p>Es relevante poder reconocer las características del problema como se
-hizo en el ejemplo anterior para saber qu técnica de conteo
-utilizar.</p>
-<p>Si importa el orden, prefiera las permutaciones, en caso contrario
-las combinaciones</p>
-<div id="bibliografía" class="section level1">
-<h1>Bibliografía</h1>
-<p>[1] Montgomery, D. C., &amp; Runger, G. C. (2018). Applied statistics
-and probability for engineers (7th ed.). Wiley.</p>
+<ul>
+<li><strong><em>IMPORTANTE</em></strong> : Tener la librería Rlab</li>
+</ul>
+<div id="distribución-de-poisson" class="section level1">
+<h1>Distribución de Poisson</h1>
+<p>Enunciado :</p>
+<p>En un centro deportivo los atletas sufren de accidentes en una tasa
+de 1 lesión cada 3 semanas. ¿Cuál es la probabilidad de que la próxima
+semana dos atletas se lesionen?¿Cuál es la probabilidad de que la
+próxima semana a lo más tres atletas se lesionen?¿Y dentro de las
+siguientes 2 semanas que se lesionen 7 atletas?</p>
+<p>SOL :</p>
+<pre class="r"><code>#Pregunta 1
+x &lt;- 2 # Dos accidentes en la siguiente semana
+lambda &lt;- 1/3 # Corresponde a la media de accidentes para este caso es lesiones/semanas
+
+# Se quiere saber P(X = 2)
+
+resultado1 &lt;- dpois(x, lambda = lambda)
+
+cat(paste(&quot;La probabilidad de que la siguiente semana se lesionen dos atletas es  &quot;), resultado1)</code></pre>
+<pre><code>## La probabilidad de que la siguiente semana se lesionen dos atletas es   0.0398073</code></pre>
+<pre class="r"><code>#Pregunta 2
+# Se quiere saber P(X &lt;= 3)
+
+resultado2 &lt;- ppois(3, lambda = lambda)
+
+cat(paste(&quot;La probabilidad de que la siguiente semana se lesionen a lo más 3 atletas es  &quot;), resultado2)</code></pre>
+<pre><code>## La probabilidad de que la siguiente semana se lesionen a lo más 3 atletas es   0.9996054</code></pre>
+<pre class="r"><code>#Pregunta 3
+# Se quiere saber P(X &lt;= 3), pero ahora son dos semnas por lo tanto lambda cambia
+lambda &lt;- lambda * 2 # Multiplicado por dos que son las semanas 
+resultado3 &lt;- ppois(3, lambda = lambda)
+
+cat(paste(&quot;La probabilidad de que la siguientes dos semanas se lesionen 3 atletas es&quot;), resultado3)</code></pre>
+<pre><code>## La probabilidad de que la siguientes dos semanas se lesionen 3 atletas es 0.9951418</code></pre>
 </div>
 
 

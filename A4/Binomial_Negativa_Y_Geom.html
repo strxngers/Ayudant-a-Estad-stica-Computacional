@@ -11,7 +11,7 @@
 
 
 
-<title>Técnicas Conteo</title>
+<title>Distribución de Binomial Negativa y Geométrica</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -379,47 +379,64 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Técnicas Conteo</h1>
+<h1 class="title toc-ignore">Distribución de Binomial Negativa y
+Geométrica</h1>
 
 </div>
 
 
-<p><strong><em>PUNTOS A CONSIDERAR :</em></strong> <br> (1) Tamaño de
-población n. <br> (2) Tamaño de muestra r. <br> (3) ¿Importa el orden?
-<br> (4) ¿Se puede repetir?</p>
-<p>EJEMPLO :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de un(a) presidente, un(a) vicepresidente, un(a)
-secretario(a) y un(a) tesorero(a).</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 4, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>SI</em></strong>, dado
-que no es lo mismo tener de presidente a Mónica, vicepresidente a
-Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente
-a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a
-Manuel. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.
-<br><br><br></p>
-<p>Otro caso podría ser :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de 3 integrantes.</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 3, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>NO</em></strong>, dado
-que no hay distinción de cargos o similares entre los 3 cargos del
-comité. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.</p>
-<p>Es relevante poder reconocer las características del problema como se
-hizo en el ejemplo anterior para saber qu técnica de conteo
-utilizar.</p>
-<p>Si importa el orden, prefiera las permutaciones, en caso contrario
-las combinaciones</p>
-<div id="bibliografía" class="section level1">
-<h1>Bibliografía</h1>
-<p>[1] Montgomery, D. C., &amp; Runger, G. C. (2018). Applied statistics
-and probability for engineers (7th ed.). Wiley.</p>
+<ul>
+<li><strong><em>IMPORTANTE</em></strong> : Tener la librería Rlab</li>
+</ul>
+<div id="distribución-geométrica" class="section level1">
+<h1>Distribución Geométrica</h1>
+<p>Enunciado :</p>
+<p>Un estudiante está postulando a beneficios para su educación superio,
+pero esta vez se hará por sorteo. Se realizarán sorteos periodicamente,
+en un sorteo el estudiante tiene un 10% de probabilidades de ganar sus
+beneficios. ¿Cual es la probabilidad de que al 3er sorteo gane los
+beneficios?¿Y al 10mo?</p>
+<p>SOL :</p>
+<p>Para el del 3er sorteo se hace los siguiente :</p>
+<pre class="r"><code># Probabiliad de ganar
+
+ganar &lt;- 0.1
+
+
+# Probabilidad de ganar al 3er sorteo
+
+tercer &lt;- dgeom(3, prob = ganar)
+#PROBABILIDAD DE GANAR BENEFICIOS AL 3ER SORTEO :
+tercer</code></pre>
+<pre><code>## [1] 0.0729</code></pre>
+<pre class="r"><code># Probabilidad de ganar al 10mo sorteo
+
+decimo &lt;- dgeom(10, prob = ganar)
+#PROBABILIDAD DE GANAR BENEFICIOS AL 10mo SORTEO :
+decimo</code></pre>
+<pre><code>## [1] 0.03486784</code></pre>
+<p><br> <br> <br> <br> <br></p>
+</div>
+<div id="distribución-binomial-negativa" class="section level1">
+<h1>Distribución Binomial Negativa</h1>
+<p>En una industria de procesadores, cada procesador tiene una
+probabilidad de 0.7 de pasar un control de calidad. Calcular la
+probabilidad de que al revisar 7 procesadores 5 pasen el control de
+calidad.</p>
+<ul>
+<li>Asuma que los resultados del control de diferentes procesadores
+diferentes son independientes.</li>
+</ul>
+<pre class="r"><code>#Datos 
+pasar_control &lt;- 0.7
+n_controles &lt;- 7
+minimo &lt;- 5
+
+resultado &lt;- dnbinom(n_controles-minimo,minimo,pasar_control)
+
+cat(paste(&quot;La probabilidadad de que al revisar 7 procesadores 5 pasen el control de calidad es :  &quot;,&quot;\n&quot;, resultado))</code></pre>
+<pre><code>## La probabilidadad de que al revisar 7 procesadores 5 pasen el control de calidad es :   
+##  0.2268945</code></pre>
 </div>
 
 

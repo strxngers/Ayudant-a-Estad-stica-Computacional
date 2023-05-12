@@ -11,7 +11,7 @@
 
 
 
-<title>Técnicas Conteo</title>
+<title>Distribución Uniforme Discreta</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -379,48 +379,36 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Técnicas Conteo</h1>
+<h1 class="title toc-ignore">Distribución Uniforme Discreta</h1>
 
 </div>
 
 
-<p><strong><em>PUNTOS A CONSIDERAR :</em></strong> <br> (1) Tamaño de
-población n. <br> (2) Tamaño de muestra r. <br> (3) ¿Importa el orden?
-<br> (4) ¿Se puede repetir?</p>
-<p>EJEMPLO :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de un(a) presidente, un(a) vicepresidente, un(a)
-secretario(a) y un(a) tesorero(a).</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 4, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>SI</em></strong>, dado
-que no es lo mismo tener de presidente a Mónica, vicepresidente a
-Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente
-a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a
-Manuel. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.
-<br><br><br></p>
-<p>Otro caso podría ser :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de 3 integrantes.</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 3, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>NO</em></strong>, dado
-que no hay distinción de cargos o similares entre los 3 cargos del
-comité. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.</p>
-<p>Es relevante poder reconocer las características del problema como se
-hizo en el ejemplo anterior para saber qu técnica de conteo
-utilizar.</p>
-<p>Si importa el orden, prefiera las permutaciones, en caso contrario
-las combinaciones</p>
-<div id="bibliografía" class="section level1">
-<h1>Bibliografía</h1>
-<p>[1] Montgomery, D. C., &amp; Runger, G. C. (2018). Applied statistics
-and probability for engineers (7th ed.). Wiley.</p>
-</div>
+<ul>
+<li><strong><em>PARA ESTA SECCIÓN ES NECESARIO TENER LA LIBRERIA
+extraDistr</em></strong></li>
+</ul>
+<p>El puesto de papas fritas “Faraona” puede generar al día entre $100
+mil y 200 mil pesos en el dia, estas ganancias siguen una distribución
+uniforme discreta.</p>
+<ul>
+<li><p>¿ Probabilidad de que gane menos de $ 150 mil?</p></li>
+<li><p>¿ Probabilidad de que sea mayor o igual a 120 mil?</p></li>
+</ul>
+<p><br> <br> <br> En la pregunta 1 se pide <span class="math inline">\(P(X \leq 150 mil)\)</span> y para lo cual es
+conveniente calcular la probabilidad acumulada, es decir, utilizar
+prefijo p :</p>
+<pre class="r"><code>resultado1 = pdunif(q = 150, min =100, max = 200, lower.tail = FALSE )
+cat(paste(&quot;Y la probabilidad de que sea menor a 150 mil es de  &quot;,resultado1))</code></pre>
+<pre><code>## Y la probabilidad de que sea menor a 150 mil es de   0.495049504950495</code></pre>
+<pre class="r"><code># No es 50% pero se acerca bastante</code></pre>
+<p><br> <br> <br> En la pregunta 2 se pide <span class="math inline">\(P(X \geq 120mil)\)</span>, para lo cual
+utilizaremos dunif:</p>
+<pre class="r"><code>resultado2 = pdunif(q = 120, min =100, max = 200, lower.tail = FALSE )
+cat(paste(&quot;Y la probabilidad de que sea mayor o igual a 120 mil es de  &quot;,resultado2))</code></pre>
+<pre><code>## Y la probabilidad de que sea mayor o igual a 120 mil es de   0.792079207920792</code></pre>
+<pre class="r"><code>#Nuevamente, casi el 80%, planteo pregunta ¿A que se debe esto?</code></pre>
+<p><br> <br> <br></p>
 
 
 

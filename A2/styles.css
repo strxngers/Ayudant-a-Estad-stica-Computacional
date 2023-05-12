@@ -1,0 +1,16 @@
+/* Estilos para el menú flotante */
+#TOC.float {
+  background-color: red;
+  color: white;
+}
+
+/* Estilos para los elementos del menú flotante */
+#TOC.float li a {
+  color: white;
+}
+
+/* Estilos para los elementos activos del menú flotante */
+#TOC.float li.active a {
+  background-color: white;
+  color: black;
+}

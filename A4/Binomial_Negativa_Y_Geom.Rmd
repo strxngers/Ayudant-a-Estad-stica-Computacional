@@ -1,0 +1,82 @@
+---
+title: "Distribución de Binomial Negativa y Geométrica"
+output: 
+  html_document:
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rlab)
+```
+
+* ***IMPORTANTE*** : Tener la librería Rlab
+
+# Distribución Geométrica
+
+Enunciado :
+
+
+Un estudiante está postulando a beneficios para su educación superio, pero esta vez se hará por sorteo. Se realizarán sorteos periodicamente, en un sorteo el estudiante tiene un 10% de probabilidades de ganar sus beneficios. ¿Cual es la probabilidad de que al 3er sorteo gane los beneficios?¿Y al 10mo?
+
+
+
+SOL : 
+
+
+Para el del 3er sorteo se hace los siguiente : 
+
+```{r, echo=TRUE}
+
+# Probabiliad de ganar
+
+ganar <- 0.1
+
+
+# Probabilidad de ganar al 3er sorteo
+
+tercer <- dgeom(3, prob = ganar)
+#PROBABILIDAD DE GANAR BENEFICIOS AL 3ER SORTEO :
+tercer
+
+```
+
+```{r, echo=TRUE}
+
+# Probabilidad de ganar al 10mo sorteo
+
+decimo <- dgeom(10, prob = ganar)
+#PROBABILIDAD DE GANAR BENEFICIOS AL 10mo SORTEO :
+decimo
+
+```
+<br>
+<br>
+<br>
+<br>
+<br>
+
+# Distribución Binomial Negativa
+
+En una industria de procesadores, cada procesador tiene una probabilidad de 0.7 de pasar un control de calidad. Calcular la probabilidad de que al revisar 7 procesadores 5 pasen el control de calidad.
+
+* Asuma que los resultados del control de diferentes procesadores diferentes son independientes.
+
+
+```{r, echo=TRUE}
+#Datos 
+pasar_control <- 0.7
+n_controles <- 7
+minimo <- 5
+
+resultado <- dnbinom(n_controles-minimo,minimo,pasar_control)
+
+cat(paste("La probabilidadad de que al revisar 7 procesadores 5 pasen el control de calidad es :  ","\n", resultado))
+
+
+
+
+```
+
+
+

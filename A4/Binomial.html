@@ -11,7 +11,7 @@
 
 
 
-<title>Técnicas Conteo</title>
+<title>Distribución de Binomial</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -379,47 +379,31 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Técnicas Conteo</h1>
+<h1 class="title toc-ignore">Distribución de Binomial</h1>
 
 </div>
 
 
-<p><strong><em>PUNTOS A CONSIDERAR :</em></strong> <br> (1) Tamaño de
-población n. <br> (2) Tamaño de muestra r. <br> (3) ¿Importa el orden?
-<br> (4) ¿Se puede repetir?</p>
-<p>EJEMPLO :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de un(a) presidente, un(a) vicepresidente, un(a)
-secretario(a) y un(a) tesorero(a).</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 4, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>SI</em></strong>, dado
-que no es lo mismo tener de presidente a Mónica, vicepresidente a
-Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente
-a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a
-Manuel. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.
-<br><br><br></p>
-<p>Otro caso podría ser :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de 3 integrantes.</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 3, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>NO</em></strong>, dado
-que no hay distinción de cargos o similares entre los 3 cargos del
-comité. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.</p>
-<p>Es relevante poder reconocer las características del problema como se
-hizo en el ejemplo anterior para saber qu técnica de conteo
-utilizar.</p>
-<p>Si importa el orden, prefiera las permutaciones, en caso contrario
-las combinaciones</p>
-<div id="bibliografía" class="section level1">
-<h1>Bibliografía</h1>
-<p>[1] Montgomery, D. C., &amp; Runger, G. C. (2018). Applied statistics
-and probability for engineers (7th ed.). Wiley.</p>
+<ul>
+<li><strong><em>IMPORTANTE</em></strong> : Tener la librería Rlab</li>
+</ul>
+<div id="problema" class="section level1">
+<h1>Problema</h1>
+<p>En una lotería se sortearon y ganaron 20 premios, el total de tickets
+jugados fueron 2000 ¿Cual es la posibilidad de que ganes un premio?¿Y la
+posibilidad de que ganen los miembros de tu familia?</p>
+<pre class="r"><code># Primero que nada debemos calcular la probabilidad de ganarse la loteria
+
+ganar &lt;- 20/2000
+n &lt;- 3 # Este es el tamaño de mi familia, para mi caso es 3, pero ustedes lo pueden cambiar como gusten
+
+
+
+yo &lt;- dbinom(1,size =n, prob = ganar )
+
+familia &lt;- dbinom (n, size = n, prob = ganar)</code></pre>
+<pre><code>## Probabilidad de que gane solo yo :  0.029403</code></pre>
+<pre><code>## Probabilidad de que ganen todos en mi familia :  1e-06</code></pre>
 </div>
 
 

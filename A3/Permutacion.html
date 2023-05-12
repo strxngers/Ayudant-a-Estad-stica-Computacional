@@ -11,7 +11,7 @@
 
 
 
-<title>Técnicas Conteo</title>
+<title>Permutaciones</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -379,43 +379,98 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Técnicas Conteo</h1>
+<h1 class="title toc-ignore">Permutaciones</h1>
 
 </div>
 
 
-<p><strong><em>PUNTOS A CONSIDERAR :</em></strong> <br> (1) Tamaño de
-población n. <br> (2) Tamaño de muestra r. <br> (3) ¿Importa el orden?
-<br> (4) ¿Se puede repetir?</p>
-<p>EJEMPLO :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de un(a) presidente, un(a) vicepresidente, un(a)
-secretario(a) y un(a) tesorero(a).</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 4, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>SI</em></strong>, dado
-que no es lo mismo tener de presidente a Mónica, vicepresidente a
-Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente
-a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a
-Manuel. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.
-<br><br><br></p>
-<p>Otro caso podría ser :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de 3 integrantes.</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 3, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>NO</em></strong>, dado
-que no hay distinción de cargos o similares entre los 3 cargos del
-comité. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.</p>
-<p>Es relevante poder reconocer las características del problema como se
-hizo en el ejemplo anterior para saber qu técnica de conteo
-utilizar.</p>
-<p>Si importa el orden, prefiera las permutaciones, en caso contrario
-las combinaciones</p>
+<div id="ejemplo-1-permutaciones" class="section level3">
+<h3>Ejemplo 1 Permutaciones</h3>
+<p>Se deben ordenar 3 lápices de color diferentes entre cada uno.</p>
+<p>Dependiendo de lo que se quiere, para efectos de este curso es mejor
+utilizar la fórmula permutation() o quizas una función en R que solo
+calcule la cantidad de formas a ordenar el conjunto.</p>
+<p>Si la pregunta es: ¿<strong><em>De cuantas</em></strong> maneras se
+puede ordenar el conjunto de lápices?. En este caso se puede realizar
+los siguiente :</p>
+<pre class="r"><code>permutacionTamanioN &lt;- function(tamanio_poblacion){
+  return(factorial(tamanio_poblacion))
+}
+
+
+n &lt;- 3
+total &lt;- permutacionTamanioN(n)
+cat(paste(&quot;Se pueden hacer un tota de combinaciones igual a  : &quot;,total))</code></pre>
+<pre><code>## Se pueden hacer un tota de combinaciones igual a  :  6</code></pre>
+<p>Ahora si la pregunta fuese conseguir todas las formas de ordenar, de
+manera que se puedan ver, se puede recurrir a las siguientes funciones
+:</p>
+<pre class="r"><code># Se utilzia la libreria combinat
+# Si no tienen esta libreria utilicen install.packages(&quot;combinat en la consola&quot;)
+lapices &lt;-c(&quot;azul&quot;, &quot;rojo&quot;, &quot;verde&quot;)
+formas&lt;-permn(lapices)
+
+for (i in 1:length(formas)) {
+  cat(paste(formas[i]), &quot;\n&quot;)
+  
+}</code></pre>
+<pre><code>## c(&quot;azul&quot;, &quot;rojo&quot;, &quot;verde&quot;) 
+## c(&quot;azul&quot;, &quot;verde&quot;, &quot;rojo&quot;) 
+## c(&quot;verde&quot;, &quot;azul&quot;, &quot;rojo&quot;) 
+## c(&quot;verde&quot;, &quot;rojo&quot;, &quot;azul&quot;) 
+## c(&quot;rojo&quot;, &quot;verde&quot;, &quot;azul&quot;) 
+## c(&quot;rojo&quot;, &quot;azul&quot;, &quot;verde&quot;)</code></pre>
+<p><strong><em>OBS : A veces si el volumen de los datos es muy grande, y
+se usa permn(), es probable que demore en generar todas las
+combinaciones, por lo cual sería más conveniente saber la cantidad de
+combinaciones. Aunque realmente depende de lo que se pida en el
+problema.</em></strong> <br> <br> <br></p>
+</div>
+<div id="ejemplo-2-permutaciones-de-subconjuntos" class="section level3">
+<h3>Ejemplo 2 Permutaciones de subconjuntos</h3>
+<p>En un curso de 10 estudiantes se quiere elegir un presidente, un
+secratio y un tesorero¿De cuantás maneras se puede seleccionar ?</p>
+<pre class="r"><code>#   Parametros:
+#     poblacion : tamaño total del conjunto dado, para el ejemplo es 10
+#     muestra   : tamaño del comité que se quiere 
+perm_subconj &lt;- function(poblacion, muestra){
+  resultado &lt;- factorial(poblacion)/factorial(poblacion-muestra)
+  return(resultado)
+}
+formas &lt;- perm_subconj(10, 3)
+cat(paste(&quot;Se pueden conformar  &quot; , formas, &quot; directivas diferentes&quot;))</code></pre>
+<pre><code>## Se pueden conformar   720  directivas diferentes</code></pre>
+<p><br> <br> <br></p>
+</div>
+<div id="ejemplo-3-permutaciones-de-objetos-similares" class="section level3">
+<h3>Ejemplo 3 Permutaciones de objetos similares</h3>
+<p>De cuantas maneras diferentes se puede ordenar las letras de la
+palabra “MATEMATICAS”.</p>
+<p>SOL: Para este caso tenemos letras elemetos similares dentro de la
+palabra por lo tanto la fórmula de este caso es diferente.</p>
+<pre class="r"><code># ESTAS LINEAS DE CODIGO PROBABLEMENTE CONGELEN LA EJECUCIÓN DEL PROGRAMA AL HACER KNIT
+#Si quieres puedes descomentarlas y verlas por ti mismo, pero lo que pasa es que
+#Comienza a generar todas las combinaciones para está permutación
+#letras &lt;-c(&quot;M&quot;, &quot;A&quot;,&quot;T&quot;,&quot;E&quot;,&quot;M&quot;,&quot;A&quot;,&quot;T&quot;,&quot;I&quot;,&quot;C&quot;,&quot;A&quot;,&quot;S&quot;)
+#frec &lt;- table(letras)
+#perms &lt;-permn (11, freq = frec)
+#perms
+
+
+
+#Es por eso que preferiremos hacer los siguiente
+
+#El numerador tiene el total de letras y el denominador un factorial por cada letra
+# que tenga más de una ocurrencia, siendo el valor de este factorial la cantidad de veces que se repite esa letra. 
+#Para este caso 3 veces &quot;A&quot;, 2 veces &quot;M&quot; y 2 veces &quot;T&quot;
+ 
+resultado = factorial(11)/(factorial(2)*factorial(2)*factorial(3))
+cat(paste( &quot;El resultado es :&quot; , resultado))</code></pre>
+<pre><code>## El resultado es : 1663200</code></pre>
+<p>Les dejo propuesto que implemente una función para permutación con
+repetición o objetos similares, claro que solo para contabilizar la
+cantidad y no generar todas las combinaciones.</p>
+</div>
 <div id="bibliografía" class="section level1">
 <h1>Bibliografía</h1>
 <p>[1] Montgomery, D. C., &amp; Runger, G. C. (2018). Applied statistics

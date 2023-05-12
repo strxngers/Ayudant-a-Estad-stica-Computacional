@@ -1,0 +1,53 @@
+---
+title: "Distribución Hipergeométrica"
+output: 
+  html_document:
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rlab)
+```
+
+* ***IMPORTANTE*** : Tener la librería Rlab
+
+# Distribución Hipergeométrica
+
+Enunciado :
+
+
+En una caja de diferentes tipos de bombones hay, 10 en total de los cuales 4 tienen picante. Si se eligen 5 bombones de manera aleatoria y sin reemplazo.¿Cuál es la probabilidad de elegir 2 bombones picantes?¿y de elegir a lo más 2?
+
+
+SOL:
+```{r, echo =TRUE}
+
+#Para la pregunta 1
+
+x <- 2  # Cantidad de artículos defectuosos
+
+N <- 10 # Número total de bombones en la caja
+
+M <- 4 # Los cuatro bombones picants
+
+n <- 5 # Tamaño de la muestra
+
+# P(X = 2)
+resultado1 <-dhyper(x,M,N-M,n)
+
+cat(paste("La probabilidad de que dos sean picantes es  "), resultado1)
+
+
+# P(X <= 2)
+resultado2 <-phyper(x,M,N-M,n)
+
+cat(paste("La probabilidad de que a lo más dos sean picantes es  "), resultado2)
+
+
+
+
+```
+
+
+

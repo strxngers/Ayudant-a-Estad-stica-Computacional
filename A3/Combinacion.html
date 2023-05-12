@@ -11,7 +11,7 @@
 
 
 
-<title>Técnicas Conteo</title>
+<title>Combinaciones</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -379,43 +379,72 @@ pre code {
 
 
 
-<h1 class="title toc-ignore">Técnicas Conteo</h1>
+<h1 class="title toc-ignore">Combinaciones</h1>
 
 </div>
 
 
-<p><strong><em>PUNTOS A CONSIDERAR :</em></strong> <br> (1) Tamaño de
-población n. <br> (2) Tamaño de muestra r. <br> (3) ¿Importa el orden?
-<br> (4) ¿Se puede repetir?</p>
-<p>EJEMPLO :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de un(a) presidente, un(a) vicepresidente, un(a)
-secretario(a) y un(a) tesorero(a).</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 4, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>SI</em></strong>, dado
-que no es lo mismo tener de presidente a Mónica, vicepresidente a
-Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente
-a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a
-Manuel. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.
-<br><br><br></p>
-<p>Otro caso podría ser :</p>
-<p>Se quiere generar un comité en un curso de 100 estudiantes, el comité
-se compone de 3 integrantes.</p>
-<p><em>Para este contexto sucede los siguiente</em> <br><br><br> (1)
-Tamaño de población = 100 , que es el total de estudiantes <br> (2)
-Tamaño de muestra = 3, dado que son los cargos necesarios para formar el
-comité <br> (3) ¿Importa el orden? <strong><em>NO</em></strong>, dado
-que no hay distinción de cargos o similares entre los 3 cargos del
-comité. <br> (4) ¿Se puede repetir? <strong><em>NO</em></strong>, no es
-posible en un caso tener a la misma persona en más de un cargo.</p>
-<p>Es relevante poder reconocer las características del problema como se
-hizo en el ejemplo anterior para saber qu técnica de conteo
-utilizar.</p>
-<p>Si importa el orden, prefiera las permutaciones, en caso contrario
-las combinaciones</p>
+<p>Aquí <strong><em>NO</em></strong> importa el orden . La librería
+<strong><em>combinat</em></strong> también tiene una función para
+<em><strong><em>generar</em></strong></em> combinaciones, es decir, que
+si realmente queremos solo saber el total de combinaciones de una
+situación, no sería muy conveniente realizarlo con volúmenes de
+conjuntos muy grandes. Es por esto que a continuación está implementada
+una función que entrega el número de combinaciones a generar de una
+población tamaño n y muestra.</p>
+<pre class="r"><code>mi_combinatoria &lt;- function(n,r){
+    resultado = factorial(n)/(factorial(n-r)*factorial(r))
+    return(resultado)
+}</code></pre>
+<div id="ejemplo" class="section level2">
+<h2>Ejemplo</h2>
+<p>Andy tiene 8 pantalones diferentes pero para un viaje solo puede
+llevar cuatro, ¿Cuáles son las posibles combinaciones para llevar en el
+viaje de Andy?</p>
+<pre class="r"><code>pantalones &lt;- c(&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,&quot;E&quot;,&quot;F&quot;,&quot;G&quot;,&quot;H&quot;)
+
+
+#Utilizando la función implementada 
+
+resultado &lt;- mi_combinatoria(length(pantalones), 4)
+
+resultado</code></pre>
+<pre><code>## [1] 70</code></pre>
+<pre class="r"><code>#Ahora con la función de la librería combinat
+resultado2 &lt;- combn(pantalones, 4)
+resultado2</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14]
+## [1,] &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;  &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;  
+## [2,] &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;  &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [3,] &quot;C&quot;  &quot;C&quot;  &quot;C&quot;  &quot;C&quot;  &quot;C&quot;  &quot;D&quot;  &quot;D&quot;  &quot;D&quot;  &quot;D&quot;  &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;  
+## [4,] &quot;D&quot;  &quot;E&quot;  &quot;F&quot;  &quot;G&quot;  &quot;H&quot;  &quot;E&quot;  &quot;F&quot;  &quot;G&quot;  &quot;H&quot;  &quot;F&quot;   &quot;G&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;  
+##      [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26]
+## [1,] &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;  
+## [2,] &quot;B&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;D&quot;  
+## [3,] &quot;G&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;E&quot;  
+## [4,] &quot;H&quot;   &quot;E&quot;   &quot;F&quot;   &quot;G&quot;   &quot;H&quot;   &quot;F&quot;   &quot;G&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;F&quot;  
+##      [,27] [,28] [,29] [,30] [,31] [,32] [,33] [,34] [,35] [,36] [,37] [,38]
+## [1,] &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;A&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [2,] &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;  
+## [3,] &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;G&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;  
+## [4,] &quot;G&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;H&quot;   &quot;E&quot;   &quot;F&quot;   &quot;G&quot;  
+##      [,39] [,40] [,41] [,42] [,43] [,44] [,45] [,46] [,47] [,48] [,49] [,50]
+## [1,] &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;  
+## [2,] &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;  
+## [3,] &quot;D&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;  
+## [4,] &quot;H&quot;   &quot;F&quot;   &quot;G&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;F&quot;   &quot;G&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;  
+##      [,51] [,52] [,53] [,54] [,55] [,56] [,57] [,58] [,59] [,60] [,61] [,62]
+## [1,] &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;B&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;C&quot;  
+## [2,] &quot;D&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;E&quot;  
+## [3,] &quot;G&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;G&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;F&quot;  
+## [4,] &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;H&quot;   &quot;F&quot;   &quot;G&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;G&quot;  
+##      [,63] [,64] [,65] [,66] [,67] [,68] [,69] [,70]
+## [1,] &quot;C&quot;   &quot;C&quot;   &quot;C&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;D&quot;   &quot;E&quot;  
+## [2,] &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;E&quot;   &quot;E&quot;   &quot;E&quot;   &quot;F&quot;   &quot;F&quot;  
+## [3,] &quot;F&quot;   &quot;G&quot;   &quot;G&quot;   &quot;F&quot;   &quot;F&quot;   &quot;G&quot;   &quot;G&quot;   &quot;G&quot;  
+## [4,] &quot;H&quot;   &quot;H&quot;   &quot;H&quot;   &quot;G&quot;   &quot;H&quot;   &quot;H&quot;   &quot;H&quot;   &quot;H&quot;</code></pre>
+<pre class="r"><code>#Algo burdo no? imagina que pasaría si aumentará el número de pantalones de Andy</code></pre>
+</div>
 <div id="bibliografía" class="section level1">
 <h1>Bibliografía</h1>
 <p>[1] Montgomery, D. C., &amp; Runger, G. C. (2018). Applied statistics

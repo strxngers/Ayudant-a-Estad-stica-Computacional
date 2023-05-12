@@ -1,23 +1,59 @@
 ---
 title: "Técnicas Conteo"
-author: "Gaspar Catalán"
-date: '2023-05-06'
 output: 
   html_document: 
     theme: darkly
-    toc : true
-    toc_float : true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Técnicas de Conteo
+***PUNTOS A CONSIDERAR :***
+<br>
+(1) Tamaño de población n.
+<br>
+(2) Tamaño de muestra r.
+<br>
+(3) ¿Importa el orden?
+<br>
+(4) ¿Se puede repetir?
 
-## Permutaciones
+EJEMPLO : 
 
-## Combinaciones
+Se quiere generar un comité en un curso de 100 estudiantes, el comité se compone de
+un(a) presidente, un(a) vicepresidente, un(a) secretario(a) y un(a) tesorero(a).
+
+*Para este contexto sucede los siguiente*
+<br><br><br>
+(1) Tamaño de población = 100 , que es el total de estudiantes
+<br>
+(2) Tamaño de muestra = 4, dado que son los cargos necesarios para formar el comité
+<br>
+(3) ¿Importa el orden? ***SI***, dado que no es lo mismo tener de presidente a Mónica, vicepresidente a Manuel, secretario a Mario y tesorero a Leonel, que tener de presidente a Leonel, vicepresidente a Mónica, secretario a Mario y tesorero a Manuel.
+<br>
+(4) ¿Se puede repetir? ***NO***, no es posible en un caso tener a la misma persona en más de un cargo.
+<br><br><br>
+
+Otro caso podría ser : 
+
+Se quiere generar un comité en un curso de 100 estudiantes, el comité se compone de
+3 integrantes.
+
+*Para este contexto sucede los siguiente*
+<br><br><br>
+(1) Tamaño de población = 100 , que es el total de estudiantes
+<br>
+(2) Tamaño de muestra = 3, dado que son los cargos necesarios para formar el comité
+<br>
+(3) ¿Importa el orden? ***NO***, dado que no hay distinción de cargos o similares entre los 3 cargos del comité.
+<br>
+(4) ¿Se puede repetir? ***NO***, no es posible en un caso tener a la misma persona en más de un cargo.
+
+
+Es relevante poder reconocer las características del problema como se hizo en el ejemplo anterior para saber qu técnica de conteo utilizar.
+
+Si importa el orden, prefiera las permutaciones, en caso contrario las combinaciones
 
 
 # Bibliografía

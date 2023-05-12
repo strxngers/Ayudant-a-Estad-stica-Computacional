@@ -1,0 +1,57 @@
+---
+title: "Distribución de Bernoulli"
+output: 
+  html_document:
+    theme : darkly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Rlab)
+```
+
+* ***IMPORTANTE*** : Tener la librería Rlab
+
+# Problema
+
+Tengo una bolsa llena de dulces de diferentes colores. Dentro de está hay 4 mentitas ***verdes***, 6 caramelos ***rojos*** y 3 dulces ***negros***.
+
+
+- ¿Cual es la probabilidad de al meter la mano a la bolsa y obtener un dulce negro?
+
+
+
+- ¿Y rojo o verde?
+
+
+<br>
+<br>
+<br>
+
+SOL 1 :
+
+Son un total de 13 dulces de donde nos interesa revisar la probabilidad de que $P(X = 3)$
+
+
+```{r, echo=TRUE}
+negro <- dbern(1,3/13, log = FALSE)
+
+cat(paste("La probabilidad de comer un dulce negro es ", negro))
+
+```
+
+
+<br>
+<br>
+<br>
+
+
+SOL 2 :
+Son un total de 13 dulces de donde nos interesa revisar la probabilidad de que $P(X = 10)$
+
+```{r, echo=TRUE}
+red_green <-dbern(1, 10/13, log = FALSE)
+
+cat(paste("La probabilidad de comer un dulce rojo o verde es ", negro))
+```
+

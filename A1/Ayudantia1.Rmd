@@ -1,6 +1,5 @@
 ---
 title:     "Introducción a las probabilidades (parte I) "
-authors : "Gaspar Catalán" 
 output: 
   html_document: 
     theme: darkly
