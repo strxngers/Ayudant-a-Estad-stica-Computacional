@@ -16,40 +16,79 @@ output:
 
 ## Distribución uniforme continua
 
-Es una distribución de probabilidad continua que se utiliza para modelar una variable aleatoria continua que puede tomar valores dentro de un intervalo finito con la misma probabilidad
+### Ejercicio
+Supongamos que tienes una variable continua Y con distribución uniforme en [3, 7] y su función de densidad de Y es:
 
+$$ f(y) = \frac{1}{4}, \text{ si } 3 ≤ y ≤ 7 $$
+a) Encuentre la probabilidad de que una medición de Y esté entre 4 y 6
 
+Para esto debemos calcular el área bajo la curva de la función de densidad entre esos valores, lo cual se hace integrando la función de densidad asociada teniendo en cuenta los límites de integración 4 y 6, sin embargo, en r podemos utilizar la función punif.
+```{r}
+pregunta1 = punif(6,3,7)-punif(4,3,7)
+pregunta1
 
+```
 
+Por lo tanto, tenemos que la probabilidad de que una medición de y se encuentre en ese intervalo es 1/2.
 
+b) ¿Cuál es la esperanza y varianza asociada al rango [3, 7]?
 
+```{r}
+# Esperanza
+esp = (7 + 3)/ 2
+esp
 
+# Varianza
+varianza = (7 - 3)^2/12
+varianza
+```
 
+## Distribución normal
 
+### Ejercicio 1
 
+Se estima que el tiempo en horas semanales que se necesita para
+entrenar y lograr tener resistencia física, es una variable aleatoria normal,
+cuya media y varianza se desconocen.
+Calcular la media y la desviación típica de esta distribución, si se sabe
+que las dos terceras partes de las personas que comienzan a entrenar necesitan más de
+3 horas de etrenamiento a la semana y que el 7% necesita más de 6 horas.
 
+```{r}
+# Si consideramos u=0 y sd=1
+# P(x > 3) = 0.75
+p1 = qnorm(p = 1 - 0.75, mean = 0, sd = 1, lower.tail = FALSE)
+p1
 
+# Ahora, para la gente que necesita más de 6 horas
+#P(x > 6) = 0.05
+p2 = qnorm(p = 1 - 0.05, mean = 0, sd = 1)
+p2
+```
+## Aproximación normal a las distribuciones Binomial y Poisson
 
+### Ejercicio 1
+Se sabe que el porcentaje de estudiantes de una universidad que aprueban un examen de matemáticas es del 75%. Si se toma una muestra aleatoria de 100 estudiantes de esa universidad que han tomado ese examen, ¿cuál es la probabilidad de que a lo más 70 de ellos aprueben el examen?
 
+```{r}
+n <- 100   # tamaño de la muestra
+p <- 0.75  # probabilidad de éxito
+q <- 70    # número máximo de éxitos
 
+prob <- pbinom(q, n, p, lower.tail = FALSE)
+prob
+```
+### Ejercicio 2
 
+En una farmacia un empleado atiente en promedio a 25 personas por hora ¿cuál es la probabilidad que en la siguiente hora atienda como máximo a 18 personas? (k = 18, λ = 25)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```{r}
+lambda = 25
+prob2 = ppois(20,lambda)
+prob2
+```
+La probabilidad de que lleguen como máximo 18 personas a la farmacia en una
+hora es aproximadamente 0.18
 
 
 ## Bibliografía
