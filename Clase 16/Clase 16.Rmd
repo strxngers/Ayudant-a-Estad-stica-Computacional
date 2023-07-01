@@ -1,0 +1,278 @@
+---
+title:     "Introducción a las Probabilidades (Parte I) "
+author: | 
+  | Gaspar Catalan Aguilera
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+library(ggplot2)
+library(ggpubr)
+library(gridExtra)
+```
+
+<!-- #=========================== -->
+<!-- 1. Estimación Puntual -->
+<!-- #=========================== -->
+
+# 1. Estimación Puntual
+
+ >  Para esta sección se debe de tener en cuenta dos nociones, parámetro y estadístico, donde parámetro es un "resumen" de cierta ***población*** que puede ser la media, mediana, entre otros, y el estadístico es también un "resumen" pero para el caso de una ***muestra***.<br><br>
+ Ahora con estas nociones se puede decir que, el estadístico es un _**estimador puntual**_ de un parámetro, es decir, dado que un parámetro caracteriza de una forma a toda la población, entonces un estadístico es la caracterización de la muestra en la cual es puntualmente cierto sub-grupo de la población el cual fue elegido aleatoriamente( o por lo general son elegidos al azar).<br><br>
+ Es por esto que el valor del estimador puntual varia al cambiar la muestra que se use para obtenerlo. Este estimador se puede aproximar mucho a los valores de los parámetros de la población, pero es muy poco probable que sea idéntico. Pero se debe de considerar que gracias a la **Ley de los Grandes Números** (invito a que investiguen un poco al respecto), al aumentar $\uparrow$ el tamaño de la población de la cual se están extrayendo la muestras, aumenta $\uparrow$ la presición del estimador puntual. En el siguiente script observamos como se calculan estimadores puntuales de una población generada de manera aleatoria : 
+ 
+ 
+```{r, echo=TRUE}
+ #Se establece una seed para mostrar ciertos valores especificos al tomar muestras aleatorias
+set.seed(2812)
+ # Se genera la población de manera aleatoria con una media y desviación estandar fija
+ # Además se señala que sea de un tamaño relativamente considerable para mejorar la presición
+ # de los estimadores puntuales con respecto a los parámetros
+ 
+poblacion <- rnorm(n = 10000, mean = 10, sd = 2)
+mediaPoblacional <- mean(poblacion)
+mediaPoblacional
+
+
+# Ahora para el estimador puntual
+muestra <- sample(poblacion, 1000)
+m_muestra <- mean(muestra) 
+m_muestra
+
+# Calcularemos la media para cada tamaño de muestra de la muestra tomada recien
+# Y lo graficaremos para observar como se acerca más a la media poblacional
+# a medida que aumenta el tamaño de la muestra
+n <- seq(along = muestra)
+media <- cumsum (muestra)/n
+
+
+datos <- data.frame(n,media)
+
+g <- ggline(data = datos,
+            x = "n",
+            y = "media",
+            plot_type = "l",
+            color = "blue",
+            main = "Media movil",
+            xlab = "Tamaño Muestra",
+            ylab = "Media muestral")
+
+g <- g + geom_hline(aes(yintercept = mediaPoblacional), color = "red", linetype = 2) 
+print(g)
+```
+
+<!-- #=========================== -->
+<!-- 2. Distribuciones Muestrales y el Teorema del Límite Central -->
+<!-- #=========================== -->
+
+# 2. Distribuciones Muestrales y el Teorema del Límite Central
+
+>Si queremos determinar que tan adecuado es un estimador puntual(como para saber si es pertienente o no utilizarlo), se debe verificar cuanto puede llegar a variar entre diferentes muestras, si es muy grande esta variación entre muestra y muestra, será evidente que ese estimador puntual no es de fiar para los estudios que se quisieran realizar. 
+Para poder determinar esta variabilidad utilizaremos la ***Distribución Muestral***, que será la distribución de cierto estimador puntual(el que queremos estudiar su variabilidad) con una cantidad de muestras **del mismo tamaño y de la misma población**. A continuación un script que efectua la verificación de la media muestral :
+
+```{r, echo = TRUE}
+#Se establece una seed para mostrar ciertos valores especificos al tomar muestras aleatorias
+set.seed(2812)
+ # Se genera la población de manera aleatoria con una media y desviación estandar fija
+ # Además se señala que sea de un tamaño relativamente considerable para mejorar la presición
+ # de los estimadores puntuales con respecto a los parámetros
+ 
+poblacion <- rnorm(n = 10000, mean = 10, sd = 2)
+mediaPoblacional <- mean(poblacion)
+
+
+#Ahora para la distribucion muestral primero , debemos tomar una n cantidad de muestras de tamaño n2
+n<-10000
+n2<-100
+muestras <- replicate(n,sample(poblacion,n2))
+
+# Calculamos la media muestral de cada una
+medias <- colMeans(muestras)
+medias <- as.data.frame(medias)
+
+# Graficamos para ver la distribución de las medias muestrales
+
+g <- gghistogram(data = medias,
+                 x = "medias",
+                 bins = 50,
+                 title = "Distribución de las medias muestrales",
+                 xlab = "Media",
+                 ylab = "Frecuencia",
+                 color = "black",
+                 fill = "white",
+                 alpha = 0.2)
+
+# Agregamos linea que corresponde a media poblacional
+
+g <- g + geom_vline(aes(xintercept = mediaPoblacional), color = "red", linetype = 2)
+print(g)
+```
+
+>***Teorema del límite central***.<br>Este teorema dice que cuando se suman o promedian muchas variables aleatorias independientes e idénticamente distribuidas, su distribución se acerca a una distribución normal. Esto aplica a que las muestras del script anterior al graficar la distribución muestral, está se acerca mucho a una distribución normal.
+
+
+
+<!-- #=========================== -->
+<!-- 3. Conceptos Generales Estimación Puntual -->
+<!-- #=========================== -->
+
+# 3. Conceptos Generales Estimación Puntual
+
+
+  <!-- #----------------------------------->
+  <!-- 3.1 Estimadores Insesgados -->
+  <!-- #----------------------------------->
+
+## 3.1 Estimadores Insesgados
+
+>Explicados de manera poco formal pero más entendible, el sesgo es cuanto se aleja el valor real del estimador al "esperado". Entonces cuando se tiene que el valor esperado osea $E(\Theta)$ es igual al valor real del estimador $\theta$ entonces se puede considerar que el estimador es **no sesgado**  o **insesgado**  y de esto mismo se desprende que : 
+$$ E(\Theta) = \theta \Leftrightarrow  E(\Theta) - \theta = 0 $$
+Ahora en el caso que ***es sesgado***, es decir, cuando hay diferencias entre el valor esperado y el valor real del estimador se tiene que  lo siguiente :
+$$E(\Theta) \neq \theta \Leftrightarrow  E(\Theta) - \theta \neq 0$$
+De todas formas aquí dejo un script bastante breve de como conseguir el valor esperado para un estimador puntual
+
+```{r, echo = TRUE}
+
+poblacion <- rnorm(n = 10000, mean = 10, sd = 2)
+
+
+n<-10000
+n2<-100
+muestras <- replicate(n,sample(poblacion,n2))
+
+# Calculamos la media muestral de cada una
+estimadores_cada_muestra <- colMeans(muestras)
+
+valor_esperado <- mean(estimadores_cada_muestra)
+print(valor_esperado)
+
+```
+
+
+
+
+  <!-- #----------------------------------->
+  <!-- 3.2 Varianza de un Estimador Puntual -->
+  <!-- #-----------------------------------> 
+
+## 3.2 Varianza de un Estimador Puntual
+
+ La varianza en este caso hace referencia a la varianza del en la cual, si tenemos 2 muestras
+ y calculamos sus varianzas, se considerará más eficiente aquella muestra cuyo estimador tenga una varianza menor, por lo cual ese estimador (que debe ser insesgado) es más apto para estimar el parámetro de la población original. A continuación se realiza una comparación entre dos muestras para determinar cual de ellas es más consistente con la población de la cual se extrajeron las muestras.
+
+
+
+```{r, echo = FALSE}
+# Generar las muestras con la misma media pero diferentes varianzas
+media <- 10
+varianza1 <- 2
+varianza2 <- 4
+muestra1 <- rnorm(n = 1000, mean = media, sd = sqrt(varianza1))
+muestra2 <- rnorm(n = 1000, mean = media, sd = sqrt(varianza2))
+
+# Graficar las distribuciones
+hist(muestra1, freq = FALSE, xlim = c(media - 4*sqrt(varianza2), media + 4*sqrt(varianza2)),
+     ylim = c(0, 0.3), col = "blue", main = "Distribuciones normales",
+     xlab = "Valores", ylab = "Densidad de Probabilidad")
+curve(dnorm(x, mean = media, sd = sqrt(varianza1)), add = TRUE, col = "blue")
+curve(dnorm(x, mean = media, sd = sqrt(varianza2)), add = TRUE, col = "red")
+legend("topright", legend = c(paste("Varianza =", varianza1), paste("Varianza =", varianza2)),
+       col = c("blue", "red"), lty = 1)
+
+
+
+```
+
+De los resultados podemos notar que la varianza de la primera muestra es menor por lo cual, es más consistente y le podemos llamar
+
+  <!-- #----------------------------------->
+  <!-- 3.3 Error Estándar : Informar una Estimación Puntual -->
+  <!-- #----------------------------------->
+  
+## 3.3 Error Estándar : Informar una Estimación Puntual
+
+El error estandar, normalmente denotado por $SE(\Theta)$, corresponde a la desviación estándar de la distribución de un estimador muestral de un parámetro. Por ejemplo el error estándar de la media, es decir la desviación estándar de la distribución de las medias de todas las posibles muestras de n observaciones independientes, se calcula como :
+$$SE_\theta = \frac{\sigma}{ \sqrt{n}}$$ 
+donde $\sigma$ es la des estandar de la población y $n$ es el tamaño de la muestra. Por lo cual se puede concluir que mientras más grande sea el tamaño
+de la población menor sera el error estándar. A continuación se muestra un script que calcula el error estándar de la media muestral de una población.
+```{r, echo = TRUE}
+#Se establece una seed para mostrar ciertos valores especificos al tomar muestras aleatorias
+set.seed(2812)
+poblacion <- rnorm(n = 10000, mean = 10, sd = 2)
+desviacion <- sd(poblacion)
+error_estandar <- desviacion/sqrt(10000)
+print(error_estandar)
+
+```
+
+  <!-- #----------------------------------->
+  <!-- 3.4 Error Cuadrático Medio de un Estimador -->
+  <!-- #-----------------------------------> 
+
+## 3.4 Error Cuadrático Medio de un Estimador
+
+Este sirve para calcular la calidad de un estimador puntual, incluso si este es sesgado. Este se calcula como el cuadrado la diferencias
+entre los valores estimados y los valores reales, y luego se promedia. 
+$$ECM(\Theta) = E[(\Theta - \theta)^2]$$
+A continuación se muestra un script que calcula el ECM de la media muestral de una población.
+```{r, echo = TRUE}
+# Generar una muestra de datos
+set.seed(123)  # Establecer semilla para reproducibilidad
+muestra <- rnorm(n = 100, mean = 10, sd = 2)
+
+# Estimar la varianza usando la varianza muestral
+varianza_estimada <- var(muestra)
+
+# Calcular el ECM
+varianza_verdadera <- 4  # Supongamos que la varianza verdadera es 4
+ecm <- mean((varianza_estimada - varianza_verdadera)^2)
+
+# Mostrar el ECM
+print(ecm)
+
+
+
+```
+
+> **Actividad**  
+
+
+# Bibliografía
+
