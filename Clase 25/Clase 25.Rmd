@@ -1,0 +1,210 @@
+---
+title:     "Regresión lineal simple y correlación"
+author: | 
+  | Ivania Elena Guzmán
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile 
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+
+<!-- #=========================== -->
+<!-- 1. Covarianza y correlación. -->
+<!-- #=========================== -->
+
+# 1. Covarianza y correlación.
+
+La covarianza es una medida que indica la dirección de la relación lineal entre dos variables y cómo sus valores cambian juntos. Si los valores de ambas variables tienden a aumentar o disminuir al mismo tiempo, la covarianza será positiva. Si un valor aumenta mientras el otro disminuye, la covarianza será negativa. Si no hay una relación lineal aparente entre las variables, la covarianza será cercana a cero.
+
+La correlación es una medida estandarizada de la relación lineal entre dos variables. Mide la intensidad y la dirección de la relación entre las variables, independientemente de su escala. El coeficiente de correlación varía entre -1 y 1. Un coeficiente de correlación de 1 indica una correlación positiva perfecta, -1 indica una correlación negativa perfecta y 0 indica una falta de correlación.
+
+## 1.1 Coeficientes de correlación
+
+* Coeficiente de Pearson: Mide la correlación lineal entre dos variables.
+
+* Coeficiente de de Kendall: Mide la concordancia lineal entre dos variables ordenadas.
+
+* Coeficiente de Spearman: Mide la correlación no paramétrica entre dos variables.
+
+> **Actividad**
+>
+Generar datos de ejemplo x y y que tienen una relación lineal con un coeficiente de correlación conocido. Luego, calcular la matriz de correlación de Pearson
+
+```{r}
+library("PerformanceAnalytics")
+
+# Generar datos de ejemplo
+set.seed(123)
+x <- rnorm(100)
+y <- 2 * x + rnorm(100)
+
+# Crear un dataframe con los datos
+datos <- data.frame(x, y)
+
+# Calcular la matriz de correlación de Pearson
+cor_matrix <- cor(datos, method = "pearson")
+
+# Imprimir la matriz de correlación
+print(cor_matrix)
+
+# Gráfico de la matriz de correlación
+chart.Correlation(datos, histogram = TRUE, method = "pearson")
+```
+
+
+# 2. Regresión 
+
+Es una técnica estadística utilizada para modelar y analizar la relación entre una variable dependiente y una o más variables independientes. El objetivo principal de la regresión es comprender cómo los cambios en las variables independientes se asocian con cambios en la variable dependiente, lo que permite predecir o estimar valores de la variable dependiente en función de las variables independientes.
+
+Existen distintos tipos de regresión, como por ejemplo: 
+
+## 2.1 Regresión Lineal Simple 
+
+Se utiliza cuando hay una sola variable independiente. El modelo trata de ajustar una línea recta a los datos para minimizar la suma de los errores cuadrados entre los valores observados y los valores predichos por la línea.
+
+>**Actividad 1**
+>
+Supongamos que trabajas en una empresa que vende productos electrónicos y estás interesado en analizar si el gasto en publicidad en televisión está relacionado con las ventas de tus productos. Tienes datos reales sobre el gasto en publicidad en televisión y las ventas mensuales de varios productos. Quieres determinar si existe una relación lineal entre el gasto en publicidad y las ventas de tus productos.
+
+```{r}
+library("ggplot2")
+
+# Crear un dataframe con datos reales ficticios
+set.seed(123)
+productos <- c("Producto A", "Producto B", "Producto C", "Producto D", "Producto E")
+gasto_tv <- c(500, 700, 450, 800, 600)
+ventas <- c(1200, 1500, 1000, 1600, 1300)
+
+datos <- data.frame(producto = productos, gasto_tv = gasto_tv, ventas = ventas)
+
+# Crear modelo de regresión lineal
+regresion <- lm(ventas ~ gasto_tv, data = datos)
+
+# Crear gráfico
+g11 <- ggplot(datos, aes(x = gasto_tv, y = ventas, label = producto)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", color = "red", fill = "lightgray") +
+  labs(title = "Relación entre Gasto en Publicidad en TV y Ventas",
+       x = "Gasto en Publicidad en TV (US$)",
+       y = "Ventas") +
+  theme_minimal()
+
+# Mostrar el gráfico
+g11
+summary(regresion)
+```
+
+
+## 2.2 Regresión Lineal Múltiple
+
+Se utiliza cuando hay más de una variable independiente. El objetivo es ajustar un plano (o hiperplano en dimensiones superiores) a los datos para explicar la variabilidad de la variable dependiente.
+
+> **Actividad 2**
+>
+Supongamos que trabajas en una empresa de medios y estás interesado en analizar cómo el gasto en publicidad en Facebook y en periódico se relaciona con las ventas de productos. Tienes datos reales sobre el gasto en publicidad en Facebook y periódico, así como las ventas generadas. Quieres determinar si estas dos variables de gasto publicitario están relacionadas con las ventas.
+
+```{r}
+library("ggplot2")
+
+# Crear un dataframe con datos reales ficticios
+productos <- c("Producto A", "Producto B", "Producto C", "Producto D", "Producto E")
+facebook_gasto <- c(500, 700, 450, 800, 600)
+newspaper_gasto <- c(300, 400, 250, 350, 400)
+ventas <- c(1200, 1500, 1000, 1600, 1300)
+
+datos <- data.frame(producto = productos, facebook = facebook_gasto, newspaper = newspaper_gasto, ventas = ventas)
+
+# Crear modelo de regresión lineal múltiple
+regresion <- lm(ventas ~ facebook + newspaper, data = datos)
+summary(regresion)
+```
+
+## 2.3 Como evaluar
+
+* Pendiente (ANOVA F): $H_0$ – La pendiente de la recta es 0
+
+* Intercepto (ANOVA F): $H_0$  – La pendiente de la recta es 0
+
+* Bandas de confianza: Bandas de confianza para predecir el valor medio de Y en cualquier X
+
+* Coeficiente de determinación R2: Cuadrado del coeficiente de Pearson.
+
+* Residuos: Revisando la distribución de los residuos.
+
+> **Actividad 3**
+>
+Evaluar la regresión lineal de la actividad 1
+
+```{r}
+library("ggplot2")
+
+# Crear un dataframe con datos reales ficticios
+set.seed(123)
+productos <- c("Producto A", "Producto B", "Producto C", "Producto D", "Producto E")
+gasto_tv <- c(500, 700, 450, 800, 600)
+ventas <- c(1200, 1500, 1000, 1600, 1300)
+
+datos <- data.frame(producto = productos, gasto_tv = gasto_tv, ventas = ventas)
+
+# Crear modelo de regresión lineal
+regresion <- lm(ventas ~ gasto_tv, data = datos)
+
+# Crear gráfico
+g11 <- ggplot(datos, aes(x = gasto_tv, y = ventas, label = producto)) +
+  geom_point(color = "blue") +
+  geom_smooth(method = "lm", color = "red", fill = "lightgray") +
+  labs(title = "Relación entre Gasto en Publicidad en TV y Ventas",
+       x = "Gasto en Publicidad en TV (US$)",
+       y = "Ventas") +
+  theme_minimal()
+
+# Mostrar el gráfico
+g11
+summary(regresion)
+confint(regresion, level = 0.95)
+```
+
+
+
+
+
+
+

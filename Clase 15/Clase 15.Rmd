@@ -1,0 +1,277 @@
+---
+title:     "Estadística descriptiva (Parte II) "
+author: | 
+  | Ivania Elena Guzmán
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile 
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+
+<!-- #=========================== -->
+<!-- 1. Medidas de dispersión -->
+<!-- #=========================== -->
+
+# 1. Medidas de dispersión
+
+Son estadísticas utilizadas para cuantificar la variabilidad o dispersión de un conjunto de datos, proporcionando información sobre qué tan dispersos o concentrados están los valores alrededor de una medida central.
+
+## 1.1 Rango
+
+Diferencia entre valores máximos y mínimos de un conjunto de datos.
+
+## 1.2 Desviación promedio
+
+Suma de la desviación absoluta dividida por el tamaño de la población o muestra
+
+## 1.3 Varianza 
+
+Medida de dispersión con base al promedio aritmético y cuantifica la variabilidad de un conjunto de datos con respecto a su media.
+
+## 1.4 Desviación estándar
+
+Raíz cuadrada de la varianza y cuantifica la variabilidad de un conjunto de datos con respecto a su media.
+
+## 1.5 Error estándar
+
+Es la desviación estándar del promedio y representa la variabilidad o incertidumbre de una estimación realizada a partir de una muestra de datos. 
+
+## 1.6 Coeficiente de varición 
+
+Es una medida de dispersión respecto al promedio, se utiliza para comparar la variabilidad de dos o más conjuntos de datos, especialmente cuando tienen escalas diferentes. Se expresa en forma de porcentaje
+
+> **Actividad**
+>
+Supongamos que eres el gerente de una tienda que vende tres productos diferentes durante 10 días. Tienes el registro diario de ventas de cada producto en unidades. Tu objetivo es analizar la variabilidad en las ventas de los productos y obtener medidas de dispersión relevantes.
+>
+| Día | Producto A | Producto B | Producto C |
+|-----|------------|------------|------------|
+| 1   | 15         | 12         | 10         |
+| 2   | 20         | 18         | 12         |
+| 3   | 25         | 22         | 15         |
+| 4   | 18         | 25         | 8          |
+| 5   | 22         | 30         | 18         |
+| 6   | 30         | 28         | 22         |
+| 7   | 28         | 26         | 20         |
+| 8   | 23         | 20         | 25         |
+| 9   | 19         | 19         | 28         |
+| 10  | 24         | 15         | 30         |
+
+
+
+```{r}
+# Datos de ventas de tres productos durante 10 días
+producto_a = c(15, 20, 25, 18, 22, 30, 28, 23, 19, 24)
+producto_b = c(12, 18, 22, 25, 30, 28, 26, 20, 19, 15)
+producto_c = c(10, 12, 15, 8, 18, 22, 20, 25, 28, 30)
+
+# Rango
+rango_a = max(producto_a) - min(producto_a)
+rango_b = max(producto_b) - min(producto_b)
+rango_c = max(producto_c) - min(producto_c)
+
+# Desviación promedio
+media_a = mean(producto_a)
+media_b = mean(producto_b)
+media_c = mean(producto_c)
+
+desviacion_promedio_a = sum(abs(producto_a - media_a)) / length(producto_a)
+desviacion_promedio_b = sum(abs(producto_b - media_b)) / length(producto_b)
+desviacion_promedio_c = sum(abs(producto_c - media_c)) / length(producto_c)
+
+# Varianza
+varianza_a = var(producto_a)
+varianza_b = var(producto_b)
+varianza_c = var(producto_c)
+
+# Desviación estándar
+desviacion_estandar_a = sd(producto_a)
+desviacion_estandar_b = sd(producto_b)
+desviacion_estandar_c = sd(producto_c)
+
+# Error estándar
+error_estandar_a = desviacion_estandar_a / sqrt(length(producto_a))
+error_estandar_b = desviacion_estandar_b / sqrt(length(producto_b))
+error_estandar_c = desviacion_estandar_c / sqrt(length(producto_c))
+
+# Coeficiente de variación
+coeficiente_variacion_a = (desviacion_estandar_a / media_a) * 100
+coeficiente_variacion_b = (desviacion_estandar_b / media_b) * 100
+coeficiente_variacion_c = (desviacion_estandar_c / media_c) * 100
+
+# Imprimir los resultados
+print("Ventas del Producto A:")
+print(paste("Rango:", rango_a))
+print(paste("Desviación promedio:", desviacion_promedio_a))
+print(paste("Varianza:", varianza_a))
+print(paste("Desviación estándar:", desviacion_estandar_a))
+print(paste("Error estándar:", error_estandar_a))
+print(paste("Coeficiente de variación:", coeficiente_variacion_a))
+
+print("\nVentas del Producto B:")
+print(paste("Rango:", rango_b))
+print(paste("Desviación promedio:", desviacion_promedio_b))
+print(paste("Varianza:", varianza_b))
+print(paste("Desviación estándar:", desviacion_estandar_b))
+print(paste("Error estándar:", error_estandar_b))
+print(paste("Coeficiente de variación:", coeficiente_variacion_b))
+
+print("\nVentas del Producto C:")
+print(paste("Rango:", rango_c))
+print(paste("Desviación promedio:", desviacion_promedio_c))
+print(paste("Varianza:", varianza_c))
+print(paste("Desviación estándar:", desviacion_estandar_c))
+print(paste("Error estándar:", error_estandar_c))
+print(paste("Coeficiente de variación:", coeficiente_variacion_c))
+```
+
+
+# 2. Medidas de forma
+Se utilizan para describir la forma o distribución de un conjunto de datos. Estas medidas proporcionan información sobre cómo se distribuyen los valores alrededor de la media y cómo difieren de una distribución simétrica.
+
+Aquí encontramos 3 principales medidas de forma:
+
+* Simetría: Se refiere a una distribución en la que los datos se distribuyen de manera equitativa alrededor de la media. En una distribución simétrica, las colas a ambos lados de la media tienen longitudes y formas similares, y los valores se agrupan en el centro de la distribución. 
+
+* Asimetría: Mide la asimetría o falta de simetría en la distribución de los datos alrededor de la media. Una asimetría positiva indica que la cola derecha de la distribución es más larga y los valores se concentran a la izquierda de la media. Una asimetría negativa indica que la cola izquierda de la distribución es más larga y los valores se concentran a la derecha de la media. Cuando la asimetría es cercana a cero, la distribución es aproximadamente simétrica.
+
+* Curtosis: Mide el grado de concentración de los datos en la zona central de la distribución en comparación con una distribución normal. Una curtosis positiva indica que la distribución tiene picos más pronunciados y colas más pesadas que una distribución normal. Una curtosis negativa indica que la distribución tiene picos menos pronunciados y colas más livianas que una distribución normal.
+
+```{r}
+# Cargar librerías necesarias
+library(ggplot2)
+
+# Generar datos hipotéticos
+set.seed(123)  # Para obtener los mismos datos aleatorios en cada ejecución
+datos <- data.frame(variable = rnorm(100, mean = 50, sd = 10))
+
+
+# Graficar histograma para ver la distribución de los datos
+ggplot(data = datos, aes(x = variable)) +
+  geom_histogram(binwidth = 5, fill = "lightblue", color = "black") +
+  labs(title = "Histograma - Distribución de los datos",
+       x = "Variable",
+       y = "Frecuencia") +
+  theme_minimal()
+
+# Graficar boxplot para analizar la simetría y curtosis
+ggplot(data = datos, aes(x = "", y = variable)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  labs(title = "Boxplot - Simetría y Curtosis",
+       x = "",
+       y = "Variable") +
+  theme_minimal()
+
+```
+
+# 3. Valores atipicos y diagramas de caja
+
+Los valores atípicos son valores extremadamente altos o bajos en un conjunto de datos que difieren significativamente del resto de los valores. Estos valores pueden afectar negativamente el análisis estadístico y la interpretación de los resultados
+
+Los diagramas de caja son gráficos que resumen la distribución de un conjunto de datos. Consisten en un rectángulo que representa el rango intercuartílico (IQR), con una línea que representa la mediana. Los "bigotes" del diagrama de caja se extienden desde los bordes del rectángulo hasta los valores más extremos que no se consideran atípicos. Los valores que quedan fuera de los "bigotes" se muestran como puntos individuales y se consideran valores atípicos. Estos diagramas son útiles para identificar la simetría, la dispersión y la presencia de valores atípicos en un conjunto de datos.
+
+
+```{r}
+# Generar datos hipotéticos
+set.seed(123)
+calificaciones <- c(85, 90, 88, 92, 91, 89, 86, 87, 90, 87, 88, 86, 94, 91, 85, 89, 90, 86, 95, 97, 98, 100, 88, 89, 87, 86, 85, 82, 83, 81, 96)
+
+# Introducir valores atípicos
+calificaciones[5] <- 110
+calificaciones[28] <- 60
+
+# Crear un data frame con los datos
+datos <- data.frame(calificaciones)
+
+# Graficar el diagrama de caja
+ggplot(data = datos, aes(x = "", y = calificaciones)) +
+  geom_boxplot(fill = "lightblue", color = "black") +
+  geom_point(shape = 4, size = 3, color = "red") +  # Puntos rojos para los valores atípicos
+  labs(title = "Diagrama de Caja - Calificaciones de un examen",
+       x = "",
+       y = "Calificaciones") +
+  theme_minimal()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,85 @@
+---
+title:     "Estimación de parámetros por intervalo"
+author: | 
+  | Ivania Elena Guzmán
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile 
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+
+<!-- #=========================== -->
+<!-- 1. Estimación de intervalos de confianza -->
+<!-- #=========================== -->
+
+# 1. Estimación de intervalos de confianza
+
+## 1.1 Intervalo de confianza sobre la media de una distribución normal, varianza conocida
+Es el rango estimado que incluye la media poblacional con cierto nivel de confianza, basado en una muestra aleatoria y con varianza conocida. En otras palabras son intervalos acotados a dos valores simétricos que indican un porcentaje determinado.
+
+Para estimación puntual tenemos que:
+
+* 𝜃 = parámetros de interés (𝜇,𝜎²) -> $\hat{\theta}$
+
+Para estimación por intervalo tenemos:
+
+* $\hat{\theta}$ = parámetros de interés ($\overline{x}$ ,𝜎²) -> ($\hat{\theta}$ - $\alpha$ ; $\hat{\theta}$ + $\alpha$)
+
+>  **Actividad 1**
+>
+La duración en horas de las bombillas de una cierta marca se ajusta a una distribución N(3000, 1000). ¿Calcular el intervalo de confianza del 80%?
+
+```{r}
+# P(Z=<z) = 0.8 + 0.1
+IC = qnorm(0.9)
+IC 
+```
+
+> **Actividad 2**
+>
+Para una muestra aleatoria de 250 nadadores de esa ciudad se ha obtenido un tiempo medio de entrenamiento de 180 minutos. Calcule el intervalo de confianza al 90%.
+
+```{r}
+# 0.1/2 = 0.05
+# P(Z=<z) = 0.9 + 0.05
+z = qnorm(0.95)
+z
+```

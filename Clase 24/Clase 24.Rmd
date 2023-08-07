@@ -1,0 +1,186 @@
+---
+title:     "Pruebas de hipótesis para dos muestras (Parte 2)"
+author: | 
+  | Ivania Elena Guzmán
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile 
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+
+<!-- #=========================== -->
+<!-- # 1. Pruebas de hipótesis para dos muestras. -->
+<!-- #=========================== -->
+
+# 1. Pruebas de hipótesis para dos muestras
+
+Anteriormente se trabajó con pruebas paramétricas, en esta ocasión se trabajará desde lo no paramétrico. 
+
+Que sea no paramétricas implica que son pruebas estadísticas que no hacen suposiciones específicas sobre la distribución de los datos o no requieren que los datos sigan una distribución particular.
+
+## 1.1 Mediana poblacional entre dos muestras emparejadas.
+
+> **Actividad**
+>
+Supongamos que tenemos datos de un estudio que mide el rendimiento de estudiantes en matemáticas antes y después de un curso de tutoría. Queremos determinar si hay una diferencia significativa en el rendimiento antes y después del curso.
+>
+Datos:
+>
+* Antes: 70, 75, 80, 65, 72
+* Después: 80, 85, 90, 75, 78
+>
+Realiza una prueba de hipótesis emparejada para ver si hay una diferencia significativa en el rendimiento después del curso de tutoría.Utiliza un nivel de significancia del 0.05.
+
+Plantear las hipótesis:
+
+* Hipótesis nula ($H_0$): No hay diferencia en el rendimiento promedio antes y después del curso de tutoría. $\mu$d = 0
+* Hipótesis alternativa ($H_a$): Hay una diferencia en el rendimiento promedio antes y después del curso de tutoría. $\mu$d ≠ 0
+
+```{r}
+# Datos de rendimiento antes y después del curso de tutoría
+antes <- c(70, 75, 80, 65, 72)
+despues <- c(80, 85, 90, 75, 78)
+
+# Crear un data.frame con los datos emparejados
+datos_emparejados <- data.frame(Antes = antes, Despues = despues)
+
+# Graficar el boxplot
+boxplot(datos_emparejados, names = c("Antes", "Después"), col = c("cadetblue1", "palegreen2"),
+        main = "Boxplot de Rendimiento Antes y Después del Curso de Tutoría",
+        ylab = "Rendimiento", xlab = "Tiempo")
+
+# Realizar la prueba de Wilcoxon emparejada
+resultado_wilcox <- wilcox.test(antes, despues, paired = TRUE)
+resultado_wilcox
+```
+
+Con un nivel de significacia de 0.05 podemos rechazar la hipótesis nula ($H_0$) y concluir que hay evidencia suficiente para afirmar que el curso de tutoría tuvo un efecto significativo en el rendimiento de los estudiantes en matemáticas.
+
+## 1.2 Mediana poblacional entre dos muestras no emparejadas.
+
+>**Actividad**
+>
+Supongamos que queremos comparar la longitud de los pétalos (Petal.Length) entre dos especies de iris diferentes: "setosa" y "versicolor". Sin suponer que los datos tienen una distribución normal, decida con un nivel de significancia de 0,05 si hay una diferencia significativa en la longitud promedio de los pétalos entre estas dos especies. 
+
+Plantear hipótesis:
+
+* Hipótesis nula ($H_0$): No hay diferencia significativa en la longitud promedio de los pétalos entre las especies "setosa" y "versicolor" de iris. μ_setosa = μ_versicolor (donde μ representa la media poblacional).
+
+* Hipótesis alternativa ($H_a$): Hay una diferencia significativa en la longitud promedio de los pétalos entre las especies "setosa" y "versicolor" de iris. μ_setosa ≠ μ_versicolor.
+
+```{r}
+# Cargar el dataset iris (ya está incluido en R)
+data("iris")
+
+# Filtrar los datos para las especies "setosa" y "versicolor"
+datos_setosa <- iris$Petal.Length[iris$Species == "setosa"]
+datos_versicolor <- iris$Petal.Length[iris$Species == "versicolor"]
+
+# Visualizar las distribuciones con boxplot
+boxplot(datos_setosa, datos_versicolor, names = c("Setosa", "Versicolor"),
+        col = c("cadetblue1", "palegreen2"),
+        main = "Boxplot de Longitud de Pétalos en Especies Setosa y Versicolor",
+        ylab = "Longitud de Pétalos", xlab = "Especie")
+
+
+# Realizar la prueba de Wilcoxon (prueba U de Mann-Whitney)
+resultado_wilcox2 <- wilcox.test(datos_setosa, datos_versicolor)
+resultado_wilcox2
+
+```
+Dado que el p-value es extremadamente pequeño, podemos rechazar la hipótesis nula ($H_0$). Por lo tanto, podemos afirmar con un nivel de significancia de 0.05 que hay una diferencia significativa en la longitud promedio de los pétalos entre las especies "setosa" y "versicolor" de iris.
+
+## 1.3 Comparación de varianza.
+
+>**Actividad**
+>
+Un fabricante de focos está interesado en comparar la varianza de dos tipos de focos diferentes, A y B, en términos de su durabilidad. Se tomaron muestras de ambos tipos de focos y se obtuvieron los siguientes datos de durabilidad en horas:
+>
+Foco A: 1200, 1300, 1250, 1400, 1350
+Foco B: 1100, 1150, 1120, 1200, 1180, 1250
+>
+Realiza una prueba de comparación de varianza utilizando un nivel de significancia del 0.05 para determinar si las varianzas de los dos tipos de focos son significativamente diferentes.
+
+Plantear hipótesis:
+
+* Hipótesis nula ($H_0$): Las varianzas de los dos tipos de focos (A y B) son iguales.
+
+* Hipótesis alternativa ($H_a$): Las varianzas de los dos tipos de focos (A y B) son diferentes.
+
+```{r}
+# Datos
+foco_a <- c(1200, 1300, 1250, 1400, 1350)
+foco_b <- c(1100, 1150, 1120, 1200, 1180, 1250)
+
+# Prueba de comparación de varianza
+result <- var.test(foco_a, foco_b)
+result
+```
+
+Dado que el p-value de la prueba F es p = 0.4466, que es mayor que el nivel de significancia, podemos concluir que las varianzas de los dos tipos de focos (A y B) son iguales.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

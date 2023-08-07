@@ -1,0 +1,177 @@
+---
+title:     "Pruebas de hipótesis para dos muestras (Parte 1)"
+author: | 
+  | Ivania Elena Guzmán
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile 
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+
+<!-- #=========================== -->
+<!-- 1. Pruebas de hipótesis para dos muestras -->
+<!-- #=========================== -->
+
+# 1. Pruebas de hipótesis para dos muestras
+
+Tener dos muestras emparejadas implica que cada observación en una muestra está relacionada de manera única con una observación en la otra muestra. Por lo general, se utilizan muestras emparejadas cuando queremos comparar dos conjuntos de datos que están relacionados entre sí, como antes y después de un tratamiento o dos mediciones tomadas en el mismo sujeto.
+
+La media de estas diferencias se denomina "media de las diferencias" y es un estimador de la media poblacional de las diferencias
+
+## 1.1 Prueba de hipótesis para dos muestras pareadas
+
+Cuando dos muestras son pareadas, significa que las observaciones en ambas muestras están relacionadas de manera directa, es decir, cada observación en una muestra está emparejada o vinculada con una observación específica en la otra muestra. Las observaciones emparejadas generalmente provienen de la misma unidad o individuo y se recopilan en diferentes momentos o bajo diferentes condiciones.
+
+> **Actividad**
+>
+Supongamos que tenemos datos de un estudio que mide el rendimiento de estudiantes en matemáticas antes y después de un curso de tutoría. Queremos determinar si hay una diferencia significativa en el rendimiento antes y después del curso.
+>
+Datos:
+>
+* Antes: 70, 75, 80, 65, 72
+* Después: 80, 85, 90, 75, 78
+>
+Realiza una prueba de hipótesis emparejada para ver si hay una diferencia significativa en el rendimiento después del curso de tutoría, encuentre la estimación del intervalo de confianza del 95%.
+
+Plantear las hipótesis:
+
+* Hipótesis nula ($H_0$): No hay diferencia en el rendimiento promedio antes y después del curso de tutoría. $\mu$d = 0
+* Hipótesis alternativa ($H_a$): Hay una diferencia en el rendimiento promedio antes y después del curso de tutoría. $\mu$d ≠ 0
+
+```{r}
+# Datos antes y después del curso de tutoría
+antes = c(70, 75, 80, 65, 72)
+despues = c(80, 85, 90, 75, 78)
+
+# Visualizar las distribuciones con boxplot
+boxplot(antes, despues, names = c("Antes", "Después"))
+
+# Realizar la prueba de hipótesis emparejada
+resultado = t.test(antes, despues, paired = TRUE)
+resultado
+
+```
+
+Dado que el p-value es menor que el nivel de significancia, podemos rechazar la hipótesis nula ($H_0$) y concluir que hay evidencia suficiente para afirmar que el curso de tutoría tuvo un efecto significativo en el rendimiento de los estudiantes en matemáticas.
+
+## 1.2 Prueba de hipótesis para dos muestras independientes 
+
+Cuando dos muestras son independientes, tenemos que las observaciones en una muestra no están relacionadas ni vinculadas directamente con las observaciones en la otra muestra. Cada muestra representa un grupo o población diferente y no hay ninguna correspondencia o relación específica entre las observaciones en ambos grupos.
+
+> **Actividad**
+>
+Supongamos que queremos comparar la longitud de los pétalos (Petal.Length) entre dos especies de iris diferentes: "setosa" y "versicolor". Queremos determinar si hay una diferencia significativa en la longitud promedio de los pétalos entre estas dos especies.
+
+Plantear hipótesis:
+
+* Hipótesis nula ($H_0$): No hay diferencia significativa en la longitud promedio de los pétalos entre las especies "setosa" y "versicolor" de iris. μ_setosa = μ_versicolor (donde μ representa la media poblacional).
+
+* Hipótesis alternativa ($H_a$): Hay una diferencia significativa en la longitud promedio de los pétalos entre las especies "setosa" y "versicolor" de iris. μ_setosa ≠ μ_versicolor.
+
+```{r}
+# Cargar el dataset iris (ya está incluido en R)
+data("iris")
+
+# Filtrar los datos para las especies "setosa" y "versicolor"
+datos_setosa <- iris$Petal.Length[iris$Species == "setosa"]
+datos_versicolor <- iris$Petal.Length[iris$Species == "versicolor"]
+
+# Visualizar las distribuciones con boxplot
+boxplot(datos_setosa, datos_versicolor, names = c("Setosa", "Versicolor"))
+ 
+# Realizar la prueba de muestras independientes
+resultado_iris <- t.test(datos_setosa, datos_versicolor)
+resultado_iris
+
+```
+
+
+Dado que el p-value es extremadamente pequeño, podemos rechazar la hipótesis nula ($H_0$). Por lo tanto, podemos afirmar que hay una diferencia significativa en la longitud promedio de los pétalos entre las especies "setosa" y "versicolor" de iris.
+
+## 1.3 Prueba de hipótesis para dos muestras de proporción
+
+Cuando se comparan dos muestras de proporciones, se está analizando la diferencia entre las proporciones de dos grupos en una variable categórica binaria. Las proporciones representan la frecuencia relativa de un resultado específico dentro de cada grupo.
+
+>**Actividad**
+>
+Estamos interesados en comparar la proporción de flores iris del tipo "setosa" y "versicolor" que tienen un ancho de pétalo mayor o igual a 1.4 cm.
+
+Plantear hipótesis:
+
+* Hipótesis nula ($H_0$): la proporción de flores con ancho de pétalo mayor o igual a 1.4 cm es igual en ambos grupos ("setosa" y "versicolor").
+
+* Hipótesis alternativa ($H_a$): hay una diferencia significativa en las proporciones de flores con ancho de pétalo mayor o igual a 1.4 cm entre los grupos "setosa" y "versicolor".
+
+```{r}
+# Cargar el dataset iris (ya está incluido en R)
+data("iris")
+
+# Filtrar los datos para obtener solo las filas correspondientes a flores "setosa" y "versicolor"
+datos_setosa <- iris[iris$Species == "setosa", ]
+datos_versicolor <- iris[iris$Species == "versicolor", ]
+
+# Crear una tabla de contingencia para las proporciones de flores con ancho de pétalo mayor o igual a 1.4 cm
+tabla_contingencia <- table(datos_setosa$Petal.Width >= 1.4, datos_versicolor$Petal.Width >= 1.4)
+
+# Realizar el test de proporciones
+resultado_prop <- prop.test(tabla_contingencia)
+resultado_prop
+```
+Dado que el p-value es mayor que 0.05, aceptamos la hipótesis nula y podemos concluir que la proporción de flores con ancho de pétalo mayor o igual a 1.4 cm es igual en ambos grupos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

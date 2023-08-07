@@ -1,0 +1,285 @@
+---
+title:     "Estadística descriptiva (Parte I) "
+author: | 
+  | Ivania Elena Guzmán
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile 
+bibliography: references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: custom.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = knitr::image_uri("logo.png"), 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+
+<!-- #=========================== -->
+<!-- 1. ¿Qué es la estadística descriptiva? -->
+<!-- #=========================== -->
+
+# 1. ¿Qué es la estadística descriptiva?
+
+La estadística descriptiva es una rama de la estadística que se centra en la descripción y presentación significativa de datos obtenidos de una muestra o población. Su objetivo es organizar y analizar los datos de manera clara y comprensible, utilizando diagramas, gráficos y tablas para representar visualmente la información.
+
+Este tipo de análisis permite describir una situación con base en los datos disponibles, proporcionando una visión general y detallada de las características y patrones presentes en los datos. El análisis descriptivo no busca hacer inferencias o generalizaciones a una población más amplia, sino que se enfoca en explicar los datos observados en la muestra o población de interés, destacando sus tendencias, distribuciones y relaciones.
+
+# 2. Distribución de frecuencia
+
+La distribución de frecuencia en estadística descriptiva es una tabla que resume la frecuencia con la que ocurren los diferentes valores o rangos de datos en un conjunto de observaciones. Muestra cuántas veces aparece cada valor y facilita la identificación de patrones y características importantes en los datos.
+
+## 2.1 Frecuencia absoluta
+Número de veces que cada variable $i$ aparece en la muestra o población.
+
+## 2.2 Frecuencia relativa
+Porcentaje asociado a la frecuencia absoluta.
+
+## 2.3 Frecuencia acumulada 
+Suma de todos los valores iguales o menores al que está siendo analizado.
+
+## 2.4 Frecuencia relativa acumulada
+Porcentaje asociado a la frecuencia acumulada
+
+> **Actividad 1** 
+>
+Representar la distribución de frecuencias de las calificaciones utilizando un histograma:
+
+```{r}
+# Cargar librerías necesarias
+library(plotly)
+
+# Datos de la encuesta
+calificaciones = c(85, 78, 92, 67, 80, 89, 70, 95, 83, 79)
+
+# Crear el histograma interactivo con plotly
+plot_ly(x = calificaciones, type = "histogram", histnorm = "probability", marker = list(color = "skyblue"), 
+        xbins = list(size = 5), 
+        title = "Distribución de Calificaciones",
+        xaxis = list(title = "Calificaciones"),
+        yaxis = list(title = "Probabilidad")) %>%
+  layout(showlegend = FALSE)
+
+```
+
+> **Actividad 2** 
+>
+Crear un gráfico de barras para comparar la cantidad de estudiantes masculinos y femeninos en la muestra:
+
+```{r}
+# Datos de la encuesta
+genero = c("Masculino", "Femenino", "Masculino", "Femenino", "Femenino", "Masculino", "Masculino", "Femenino", "Femenino")
+
+# Crear una tabla de frecuencias para el género
+tabla_genero = table(genero)
+
+# Crear el gráfico de barras interactivo con plotly
+plot_ly(x = names(tabla_genero), y = tabla_genero, type = "bar", marker = list(color = c("blue", "pink")),
+        title = "Distribución de Género",
+        xaxis = list(title = "Género"),
+        yaxis = list(title = "Cantidad")) %>%
+  layout(showlegend = FALSE)
+
+```
+
+
+> **Actividad 3** 
+>
+Supongamos que hemos realizado una encuesta a un grupo de personas sobre su identidad de género, y las opciones de género son "Masculino", "Femenino" y "No binario". Queremos representar la distribución de género utilizando un gráfico de torta, y utilizaremos los colores de la bandera lésbica (naranja, blanco y rosa) para las diferentes secciones del gráfico.
+
+```{r}
+# Datos de la encuesta
+genero = c("Masculino", "Femenino", "Masculino", "No binario", "Femenino", "Masculino", "Femenino", "No binario", "Femenino", "Femenino")
+
+# Crear una tabla de frecuencias para el género
+tabla_genero = table(genero)
+
+# Definir una paleta de colores personalizada que combina con los otros gráficos
+colores_personalizados = c("skyblue", "pink", "purple")
+
+# Crear el gráfico de torta interactivo con plotly
+plot_ly(labels = names(tabla_genero), 
+        values = tabla_genero, 
+        type = "pie", 
+        marker = list(colors = colores_personalizados),
+        textinfo = "label+percent",  # Mostrar etiquetas y porcentaje
+        textposition = "inside",     # Posición del texto (dentro del pedazo)
+        insidetextfont = list(size = 14, color = "white"),  # Estilo del texto dentro del pedazo
+        hoverinfo = "text",          # Mostrar texto al hacer hover
+        hovertext = paste(names(tabla_genero), ": ", tabla_genero),  # Texto al hacer hover
+        title = "Distribución de Género") %>%
+  layout(showlegend = FALSE)
+```
+
+
+# 3. Medidas de posición: tendencia central 
+
+## 3.1 Media aritmética
+suma de todos los valores de una variable dividida por el número de observaciones.
+
+> **Actividad**
+>
+Dados los siguientes datos: 10, 15, 20, 25, 30. Calcula la media aritmética.
+
+```{r}
+# Datos
+datos = c(10, 15, 20, 25, 30)
+
+# Calcular la media aritmética
+media_aritmetica = mean(datos)
+
+# Imprimir el resultado
+print(media_aritmetica)
+
+```
+
+## 3.2 Media aritmética ponderada
+Aplica cuando la importancia de cada observación es diferente y se aplican pesos.
+
+> **Actividad**
+>
+Supongamos que tienes una lista de precios de productos y sus respectivas cantidades vendidas. Calcula la media aritmética ponderada del precio de los productos vendidos, utilizando las cantidades como ponderaciones.
+Precios de productos: 50, 80, 65, 100, 120
+Cantidades vendidas: 10, 15, 8, 20, 12
+
+```{r}
+# Datos
+precios_productos = c(50, 80, 65, 100, 120)
+cantidades_vendidas = c(10, 15, 8, 20, 12)
+
+# Calcular la media aritmética ponderada
+media_ponderada = sum(precios_productos * cantidades_vendidas) / sum(cantidades_vendidas)
+
+# Imprimir el resultado
+print(media_ponderada)
+
+```
+
+
+
+
+## 3.3 Madia aritmética para datos discretos agrupados
+Se basa en los datos de frecuencia
+
+> **Actividad**
+>
+Dada la siguiente tabla de frecuencias, calcula la media aritmética para datos discretos agrupados:
+>
+| Intervalo | Frecuencia |
+|-----------|------------|
+| 10 - 20   | 5          |
+| 20 - 30   | 8          |
+| 30 - 40   | 12         |
+| 40 - 50   | 7          |
+
+
+```{r}
+# Datos
+intervalos = c("10 - 20", "20 - 30", "30 - 40", "40 - 50")
+frecuencias = c(5, 8, 12, 7)
+
+# Calcular la media aritmética para datos discretos agrupados
+puntos_medios = c(15, 25, 35, 45)  # Calcula los puntos medios de cada intervalo
+suma_productos = sum(puntos_medios * frecuencias)
+n = sum(frecuencias)
+
+media_aritmetica_discreta = suma_productos / n
+
+# Imprimir el resultado
+print(media_aritmetica_discreta)
+
+```
+
+# 4. Medidas de posición: cuantiles
+
+## 4.1 Cuantiles
+Cuantiles que se multiplican por un cuarto del conjunto de datos.
+
+> **Actividad**
+>
+Supongamos que tienes las siguientes edades de un grupo de personas: 25, 28, 30, 32, 35, 36, 38, 40, 45, 50. Calcula los cuantiles que se multiplican por un cuarto del conjunto de datos.
+
+```{r}
+# Datos
+edades = c(25, 28, 30, 32, 35, 36, 38, 40, 45, 50)
+
+# Calcular los cuantiles
+cuantiles = quantile(edades, probs = 1:3/4)
+
+# Imprimir los cuantiles
+print(cuantiles)
+
+```
+
+
+## 4.2 Deciles
+Cuantiles que se multiplican por un décimo del conjunto de datos.
+
+> **Actividad**
+>
+Supongamos que tienes los siguientes datos de ventas diarias de una tienda: 1000, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000. Calcula los deciles que se multiplican por un décimo del conjunto de datos.
+
+```{r}
+# Datos
+ventas_diarias = c(1000, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000)
+
+# Calcular los deciles
+deciles = quantile(ventas_diarias, probs = 1:9/10)
+
+# Imprimir los deciles
+print(deciles)
+
+```
+
+
+
+## 4.3 Percentiles
+Cuantiles que se multiplican por un céntimo del conjunto de datos.
+
+> **Actividad**
+>
+Supongamos que tienes los siguientes datos de tiempos de respuesta de un servidor (en milisegundos): 50, 55, 60, 65, 70, 75, 80, 85, 90, 95. Calcula los percentiles que se multiplican por un céntimo del conjunto de datos.
+
+```{r}
+# Datos
+tiempos_respuesta = c(50, 55, 60, 65, 70, 75, 80, 85, 90, 95)
+
+# Calcular los percentiles
+percentiles = quantile(tiempos_respuesta, probs = 1:99/100)
+
+# Imprimir los percentiles
+print(percentiles)
+
+```
+
