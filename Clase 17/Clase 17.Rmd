@@ -1,0 +1,218 @@
+---
+title: "Estimación Puntual de Parámetros y Distribuciones muestrales (Parte 2)"
+author: | 
+  | Gaspar Catalan Aguilera
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
+bibliography: ../recursos/references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: ../recursos/custom.css
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = '../recursos/logo.png', 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+_*En el siguiente RMD se encuentran definiciones y ejemplos adaptados a su uso en R, del libro guía del curso "APPLIED STATISTICS AND PROBABILITY FOR ENGINEERS" por Douglas C. Montogomery*_
+
+
+<!-- #=========================== -->
+<!-- 1. Error estándar de Bootstraps -->
+<!-- #=========================== -->
+
+# Acercamiento al remuestreo
+
+## Error estándar de Bootstrap
+
+ En estadísticas, el remuestreo es una técnica que se utiliza especialmente cuando se dispone de una muestra pequeña. Si la muestra es representativa de la población, se pueden aplicar métodos de remuestreo, como el bootstrap o la permutación, para estudiar un estadístico de interés. Esto permite realizar inferencias sobre una o más poblaciones basándose en las muestras disponibles, aunque sean pequeñas, siempre que sean representativas de las poblaciones que se están estudiando.
+ 
+ Para bootstrap, por lo general se generan una R cantidad de muestras (donde R debe ser un valor alto para que el remuestreo tenga sentido) a partir de la muestra original, con reposición, por ejemplo
+ 
+ 
+```{r}
+# Muestra original
+original <- c(1,2,3,4,5,6,7)
+
+# Cantidad de remuestreos a realizar
+R <- 10 # OJO: POR LO GENERAL, ESTÁ EN EL ORDEN DE LOS MILES O CIENTOS DE MILES
+
+# Generamos las nuevas muestras
+remuestreo <- replicate(R, sample(original, length(original), replace=TRUE))
+
+# Cada columna es una muestra
+print(remuestreo)
+```
+
+Ahora para el caso del error estándar podemos considerar que las muestrasa obtenidas forman una distribución que consta de una media y una desviación estándar,correspondiente al error
+```{r}
+# Calculamos la media para cada remuestreo
+medias_remuestreo <- colMeans(remuestreo)
+
+# Calculamos el error estándar
+error_estandar <- sd(medias_remuestreo)
+
+cat(paste("La media de esta distribución (de bootstrap) es : ", medias_remuestreo))
+cat(paste("El error estándar de esta distribución (de bootstrap) es : ", error_estandar))
+ 
+```
+
+Si observamos con cuidado podemos notar que  el remuestreo se hace del mismo tamaño de la población (segundo parametro de sample()) y además con reposición (replace = TRUE o replace = T)
+
+
+
+<!-- #=========================== -->
+<!-- 2.Método de los Momentos -->
+<!-- #=========================== -->
+
+# Método de los Momentos
+
+## Definición
+
+El método de los momentos se basa en equiparar los momentos de la población, definidos en términos de valores esperados, con los momentos de la muestra correspondientes. Los momentos de la población serán funciones de los parámetros desconocidos, y estas ecuaciones se resuelven para obtener estimadores de los parámetros desconocidos.
+
+### Momentos de Población
+
+El k-ésimo momento de la población (o momento de la distribución) es $$E(X^k),$$ donde $k = 1,2,3,....$
+
+### Momentos de la Muestra
+
+El k-ésimo momento de la muestra es $$\frac{1}{n} \sum_{i=1}^{n} X^k_i $$ donde $k = 1,2,3,....$
+
+### Estimadores de Momentos 
+
+Los estimadores de momentos se encuentran equiparando los primeros m momentos de la población con los primeros m momentos de la muestra y resolviendo las ecuaciones resultantes para los parámetros desconocidos.
+
+
+### Ejemplo (del libro adaptado en R)
+
+Supongamos que tenemos datos de tiempos de fallo, y queremos estimar el parámetro 
+$\lambda$ de una distribución exponencial utilizando el método de los momentos.
+
+
+```{r}
+# Datos de tiempo de fallo
+failure_time <- c(11.96, 5.03, 67.40, 16.07, 31.50, 7.73, 11.10, 22.38)
+
+# Primer momento de la muestra (media de la muestra)
+x <- mean(failure_time)
+
+# Estimación del parámetro λ
+lambda_hat <- 1 / x
+
+# Resultado
+cat("Estimación de λ:", lambda_hat) # 0.0462
+
+```
+
+<!-- #=========================== -->
+<!-- 3.Método de Máxima Verosimilitud -->
+<!-- #=========================== -->
+
+# Método de Máxima Verosimilitud
+
+## Definición
+
+El método de la máxima verosimilitud (MLE) es una técnica para estimar parámetros que fue desarrollada en la década de 1920 por el famoso estadístico británico Sir R. A. Fisher.En este método **se busca el valor del parámetro que maximiza la función de verosimilitud.**
+
+### Función de Verosimilitud 
+ Si $X$ es una variable aleatoria con distribución de probabilidad $f(x;\theta)$, donde $\theta$ es un parámetro desconocido, y $x_1, x_2,...., x_n$ son los valores observados en una muestra aleatoria de tamaño $n$, la función de verosimilitud de la muestra es: $$L(\theta)=f(x_1;\theta) \cdot(x_2;\theta)\cdot,...,\cdot f(x_n;\theta)  $$
+
+### Estimador de Máxima Verosimilitud (MLE)
+ El MLE de $\theta$  es aquel valor que maximiza la función de verosimilitud $L(\theta)$
+ 
+### Propiedades del MLE
+Bajo condiciones generales y no restrictivas cuando el tamaño de la muestra $n$ es grande, el MLE tiene buenas propiedades estadísticas, incluyendo ser aproximadamente insesgado, tener una varianza cercana a la más pequeña que podría obtenerse con cualquier otro estimador, y tener una distribución normal aproximada.
+
+### Ejemplo en R con una Dist. Exponencial
+ Supongamos que queremos estimar el parámetro $\lambda$ de una distribución exponencial utilizando el método de la máxima verosimilitud.
+
+
+```{r}
+# Datos de tiempo de fallo
+failure_time <- c(11.96, 5.03, 67.40, 16.07, 31.50, 7.73, 11.10, 22.38)
+
+# Función de verosimilitud negativa (para minimizar)
+negative_log_likelihood <- function(lambda) {
+  -sum(dexp(failure_time, rate = lambda, log = TRUE))
+}
+
+# Estimación de λ usando optimización
+result <- optim(par = 1, fn = negative_log_likelihood, method = "Brent", lower = 0, upper = 1)
+
+# Resultado
+lambda_hat <- result$par
+cat("Estimación de λ (MLE):", lambda_hat) # Aproximadamente 0.0462
+
+```
+En este caso, utilizamos la optimización para encontrar el valor de $\lambda$ que maximiza la función de verosimilitud (minimiza su negativo). La estimación resultante es aproximadamente $\hat{\lambda}$= 0.0462 que es consistente con el resultado del método de los momentos.
+
+
+***NOTA*** : El MLE puede ser más eficiente que el método de los momentos y a menudo se prefiere. Sin embargo, a veces puede ser complicado maximizar la función de verosimilitud, especialmente cuando hay múltiples parámetros desconocidos o cuando las ecuaciones derivadas de la maximización son difíciles de resolver.
+
+
+Probablemente hasta estas alturas todavía no se entiende para que utilizar estos métodos, a pesar de que ya hemos mencionado ejemplos y definiciones, así que de todas formas para reforzar estas ideas, se presenta a continuación un resumen con puntos importantes para ambos métodos:
+
+# Mini Resumen
+
+Los métodos de los momentos y de máxima verosimilitud son técnicas ampliamente utilizadas en estadística para estimar parámetros de distribuciones de probabilidad. Ambos métodos tienen aplicaciones y ventajas particulares, y aquí se describen sus utilidades y cuándo utilizarlos:
+
+## Método de los momentos
+
+**Utilidad :** Es un enfoque simple y directo para estimar parámetros. Se basa en igualar los momentos de la muestra con los momentos teóricos de la distribución.
+
+### Cuándo utilizarlo :
+(1) Cuando se busca un método fácil de comprender e implementar.
+
+(2) Cuando las ecuaciones de máxima verosimilitud son demasiado complicadas para resolver.
+
+(3) En situaciones en las que los **datos son escasos** o la **estructura de la distribución** es desconocida.
+
+## Método de Máxima Verosimilitud (MLE)
+**Utilidad :** 
+<br>
+(1)Ofrece estimaciones eficientes y, a menudo, insesgadas de los parámetros.<br>
+(2)Tiene propiedades asintóticas agradables como normalidad y consistencia.<br>
+(3)Es más flexible y puede aplicarse tanto a distribuciones discretas como continuas.<br>
+(4)Las estimaciones MLE tienden a tener una menor varianza en comparación con otros métodos, lo que las hace preferibles en muchos casos.<br>
+
+
+### Cuándo utilizarlo :
+<br>
+(1)Cuando se busca un método que proporcione estimaciones eficientes y precisas.<br>
+(2)En situaciones complejas con múltiples parámetros desconocidos.<br>
+(3)Cuando se tiene suficiente cantidad de datos y se conoce o asume la distribución subyacente.<br>
+

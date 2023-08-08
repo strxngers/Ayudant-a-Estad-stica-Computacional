@@ -1,0 +1,162 @@
+---
+title: "Pruebas de Hipótesis para una sóla Muestra (Parte 2)"
+author: | 
+  | Gaspar Catalan Aguilera
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
+bibliography: ../recursos/references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: ../recursos/custom.css
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = '../recursos/logo.png', 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+_*En el siguiente RMD se encuentran definiciones y ejemplos adaptados a su uso en R, del libro guía del curso "APPLIED STATISTICS AND PROBABILITY FOR ENGINEERS" por Douglas C. Montogomery*_
+
+
+<!-- #=========================== -->
+<!-- 1.Pruebas sobre la media de una distribución normal, varianza desconocida. -->
+<!-- #=========================== -->
+
+# Pruebas sobre la media de una distribución normal, varianza desconocida.
+
+Cuando no se conoce la varianza de la población, podemos utilizar la estadística t en lugar de la estadística z para realizar pruebas de hipótesis sobre la media poblacional. Esto se aplica especialmente cuando el tamaño de la muestra es pequeño. La fórmula para la estadística de prueba t es similar a la de z, pero utilizando la desviación estándar de la muestra ($s$) en lugar de la desviación estándar de la población ($\theta$): $$t = \frac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}}$$ donde <br>
+- $\bar{x}$ es la media de la muestra<br>
+- $\mu$ la media bajo la hipótesis nula <br>
+- $s$ es la desviación estándar de la muestra <br>
+- $n$ es el tamaño de la muestra
+
+
+## Ejemplo
+
+Usaremos la función t.test() que realiza una prueba t para la media.
+
+```{r}
+# Generamos una muestra aleatoria con una media verdadera de 100 y una desviación estándar de 15
+set.seed(42)
+datos_muestra <- rnorm(30, mean = 100, sd = 15)
+
+# Realizamos una prueba t bilateral para comprobar si la media de la población es 100
+# dado que por defecto viene para bilateral. Si se quiere unilateral, agrega el parametro
+# alternative = "greater", o alternative = "less"
+hipotesis_nula <- 100
+resultado_ttest <- t.test(datos_muestra, mu = hipotesis_nula)
+
+# Mostramos los resultados
+print(resultado_ttest$p.value)
+
+```
+
+
+## Error de Tipo II y Elección del Tamaño de la Muestra
+
+Como ya hemos visto anteriormente, el error de tipo II es la probabilidad de aceptar erróneamente la hipótesis nula cuando es falsa. Está relacionado con la potencia estadística.
+
+### Ejemplo
+
+Podemos demostrar la relación entre el tamaño de la muestra y la potencia estadística en R. Para ello, podemos realizar una serie de simulaciones, variando el tamaño de la muestra, y trazar cómo la potencia cambia con el tamaño de la muestra, como sigue a continuación :
+
+```{r}
+# Parámetros
+media_verdadera <- 5 # o valor media original
+media_hipotesis_nula <- 0 # o valor nulo
+desviacion_estandar <- 10
+alpha <- 0.05
+simulaciones <- 1000
+tamanos_muestra <- seq(10, 500, by = 10)
+
+# Función para realizar una simulación
+simulacion <- function(tamano_muestra) {
+  resultados <- replicate(simulaciones, {
+    muestra <- rnorm(tamano_muestra, mean = media_verdadera, sd = desviacion_estandar)
+    resultado_ttest <- t.test(muestra, mu = media_hipotesis_nula)
+    return(resultado_ttest$p.value < alpha)
+  })
+  potencia <- mean(resultados)
+  return(potencia)
+}
+
+# Calcular la potencia para diferentes tamaños de muestra
+potencias <- sapply(tamanos_muestra, simulacion)
+
+# Graficar
+plot(tamanos_muestra, potencias, type="l", xlab="Tamaño de la muestra", ylab="Potencia", main="Relación entre Tamaño de Muestra y Potencia")
+
+```
+
+<!-- #=========================== -->
+<!-- 2. Pruebas sobre la varianza y la desviación estándar de una distribución normal. -->
+<!-- #=========================== -->
+# Pruebas sobre la varianza y la desviación estándar de una distribución normal.
+## Pruebas de Hipótesis sobre la Varianza
+
+Para probar si una varianza poblacional es igual a un valor específico, podemos utilizar la prueba chi-cuadrado. La fórmula del estadístico de prueba es:
+$$X^2 = \frac{(n-1)S^2}{\sigma_0^2}$$ donde,
+
+- n es el tamño de la muestra<br>
+- $S^2$ la varianzsa de la muestra, y $\sigma^2_0$ la varianzaz poblacional bajo la hipótesis nula
+
+y la hipótesis nula es : $H_0 : \sigma^2 = \sigma^2_0$
+
+### Ejemplo 
+
+Para probar la varianza en R, puedes usar la prueba de chi-cuadrado junto con la función chisq.test.: 
+
+```{r}
+muestra <- c(2.3, 3.5, 4.1, 3.9, 2.8) # Tu muestra
+n <- length(muestra)
+s2 <- var(muestra) # Varianza de la muestra
+sigma2_0 <- 4 # Varianza bajo la hipótesis nula
+
+X2 <- (n - 1) * s2 / sigma2_0
+
+p_valor <- 2 * min(pchisq(X2, df = n - 1), 1 - pchisq(X2, df = n - 1))
+print(p_valor)
+
+```
+
+El valor de $df = n - 1$ representa los grados de libertad, que en este caso son igual a $n - 1$, donde $n$ es el tamaño de la muestra.
+
+
+
+## Error de Tipo II y Elección del Tamaño de la Muestra
+
+No es por querer ser repetitivo, pero hay que ver el caso a caso, para el caso de la prueba sobre la varianza, el tamaño de la muestra afectará tanto la potencia como la probabilidad de cometer errores de tipo I y II. Un tamaño de muestra más grande generalmente aumenta la potencia y reduce la probabilidad de errores.
+
+Para calcular el tamaño de la muestra necesario para lograr una potencia deseada en una prueba sobre la varianza, puedes utilizar técnicas de simulación similares a las que se describieron anteriormente para la media. Deberás simular muestras con la varianza alternativa, realizar la prueba chi-cuadrado en cada una, y calcular la proporción de veces que rechazas la hipótesis nula.

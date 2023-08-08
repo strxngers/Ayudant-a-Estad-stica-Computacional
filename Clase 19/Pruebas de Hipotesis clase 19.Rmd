@@ -1,0 +1,251 @@
+---
+title: "Pruebas de Hipótesis para una sóla Muestra (Parte 1)"
+author: | 
+  | Gaspar Catalan Aguilera
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
+bibliography: ../recursos/references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: ../recursos/custom.css
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = '../recursos/logo.png', 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+_*En el siguiente RMD se encuentran definiciones y ejemplos adaptados a su uso en R, del libro guía del curso "APPLIED STATISTICS AND PROBABILITY FOR ENGINEERS" por Douglas C. Montogomery*_
+
+
+<!-- #=========================== -->
+<!-- 1.Prueba de Hipótesis -->
+<!-- #=========================== -->
+
+# Prueba de Hipótesis
+
+Acabamos de entrar en uno de los temas con los que más deberán familiarizarse, para efectos de este curso (Estadística Computacional), y para el siguiente que es estadística Inferecial, y todo el campo de analisis de datos en realidad.
+
+## Hipótesis estadísticas
+
+En palabras muy sencillas, las hipótesis estadísticas son afirmaciones acerca de un parámetro poblacional. Se dividen en dos tipos:
+<br>
+***Hipótesis Nula***$(H_0)$, que por lo general es una afirmación de que no hay efecto o diferencia, y se plantea para ser refutada.
+<br>
+***Hipótesis Alternativa*** $(H_A)$, es aquello que se quiere probar que tiene un efecto en el experimento y es aceptado solamente si existe evidencia suficiente como para señalar que la $H_0$ se debe de rechazar
+
+
+Cabe señalar que existe la posibilidad de errar al concluir, ya sea por que los resultados de las pruebas en realidad son erroneos, u otra razón, como que se realizó mal el procedimiento para obtener evidencia para determinar cual hipótesis rechazar y cual aceptar. Estos errores son conocidos y tienen nombre en cada caso y se definen a continuación
+
+***Error Tipo I : ***
+Ocurre cuando se rechaza una hipótesis nula cuando ésta es verdadera
+
+
+***Error Tipo II : ***
+Ocurre cuando se acepta una hipótesis nula cuando ésta es falsa.
+
+A pesar de que ambos errores se pueden considerar algo 'malo', es mucho más grave en general llegar a un error de tipo 2, y más que explicaciones, les doy un ejemplo (un caso hipótetico solo para mejor comprensión de los errores) que probablemente les dé a entender más rápidamente el porqué:
+
+$H_0$: El medicamento NO produce cáncer terminal.<br>
+$H_A$: El medicamento SÍ produce cáncer terminal.
+
+Si la compañía farmacéutica que produce este medicamento cometiese un error de tipo 2 al estudiar el efecto de su medicamento, lo que significa que aceptó la hipótesis nula cuando era falsa, entonces está distribuyendo un medicamento que puede producir consecuencias graves para aquellos que lo consuman, y posteriormente en situaciones legales para la misma empresa. En cambio, si la empresa hubiese rechazado la hipótesis nula a favor de la hipótesis alternativa, entonces se hubiese ahorrado demandas y no hubiese puesto en peligro la vida de potenciales consumidores de este medicamento.
+
+
+## Pruebas de Hipótesis
+
+Se utilizan para determinar si hay suficiente evidencia en una muestra de datos para inferir que una afirmación particular es válida para toda una población. En estas debemos considerar dos elementos básicos para realizar el estudio :
+
+**Estadístico de Prueba: ** corresponde al valor calculado a partir de datos muestrales para decidir si rechazar la hipótesis nula.<br>
+**Nivel de Significancia ( $\alpha$ )** : es la probabilidad de rechazar la hipótesis nula cuando es verdadera. Para efectos de este curso y en general se utilizan valores entre 0.01 y 0.05, donde se dice que se es exigiente al considerar 0.01 y un poco más flexible con 0.05
+
+## Hipótesis Unilateral v/s Bilateral
+
+
+Es fácil reconocer y clasificar una hipótesis si es bilateral o unilateral solo al mirar como están planteadas las hipótesis a probar, por ejemplo
+$$H_0 : a = B$$ o $$ H_a : a \neq b $$
+Estás corresponde a hipótesis bilaterales, en cambio las unilaterales sería del tipo :
+
+$$H_0 : a \geq B$$ o $$ H_a : a < b $$
+Y para reforzar está idea a continuación gráficamos estas ideas :
+
+```{r}
+
+# Bibliotecas necesarias
+library(ggplot2)
+
+# Gráfico Bilateral
+mu <- 0
+sigma <- 1
+alpha <- 0.05
+x <- seq(-4, 4, by=0.01)
+y <- dnorm(x, mean=mu, sd=sigma)
+lower_tail <- qnorm(alpha/2)
+upper_tail <- qnorm(1 - alpha/2)
+
+ggplot(data.frame(x,y), aes(x, y)) +
+  geom_line() +
+  geom_area(data=data.frame(x=x[x<=lower_tail], y=y[x<=lower_tail]), fill="red", alpha=0.4) +
+  geom_area(data=data.frame(x=x[x>=upper_tail], y=y[x>=upper_tail]), fill="red", alpha=0.4) +
+  ggtitle('Gráfico Bilateral')
+
+# Gráfico Unilateral Derecho
+upper_tail_right <- qnorm(1 - alpha)
+ggplot(data.frame(x,y), aes(x, y)) +
+  geom_line() +
+  geom_area(data=data.frame(x=x[x>=upper_tail_right], y=y[x>=upper_tail_right]), fill="red", alpha=0.4) +
+  ggtitle('Gráfico Unilateral Derecho')
+
+
+# Gráfico Unilateral Izquierdo
+lower_tail_left <- qnorm(alpha)
+ggplot(data.frame(x,y), aes(x, y)) +
+  geom_line() +
+  geom_area(data=data.frame(x=x[x<=lower_tail_left], y=y[x<=lower_tail_left]), fill="red", alpha=0.4) +
+  ggtitle('Gráfico Unilateral Izquierdo')
+
+
+```
+
+## Valores p en Pruebas de Hipótesis
+
+El valor p, o valor de probabilidad, es un concepto fundamental en las pruebas de hipótesis estadísticas. Se utiliza para determinar la evidencia en contra de una hipótesis nula especificada.
+
+**¿Qué indica?** : El valor p representa la probabilidad de que una estadística de prueba sea al menos tan extrema como la observada, suponiendo que la hipótesis nula es verdadera. Cuanto más pequeño es el valor p, más fuerte es la evidencia contra la hipótesis nula, y mayor es la justificación para rechazarla. El valor p varía entre 0 y 1, un valor p cercano a 0 indica una fuerte evidencia contra la hipótesis nula, por lo que se rechaza, en cambio Un valor p cercano a 1 indica una débil evidencia contra la hipótesis nula, por lo que no se rechaza.
+
+### Ejemplo : 
+
+Supongamos que quieres probar si una muestra proviene de una distribución normal con media 0 y desviación estándar 1. Puedes utilizar una prueba t para esto (más adelante descibiremos para que y como utilizar la prueba t, por el momento solo considera que entrega un p valor):
+
+```{r}
+
+# Crear una muestra
+set.seed(123)
+sample_data <- rnorm(100, mean = 0, sd = 1)
+
+# Realizar una prueba t para la media
+t_test <- t.test(sample_data, mu = 0)
+
+# Mostrar el valor p
+print(paste("El valor p es:", t_test$p.value))
+
+```
+Si el valor p resultante es menor que un nivel de significancia predefinido (como 0.05), rechazarías la hipótesis nula de que la media de la muestra es 0.
+
+
+## Intervalo de confianza
+
+El valor p en una prueba de hipótesis te dice la probabilidad de obtener una estadística de prueba al menos tan extrema como la observada, suponiendo que la hipótesis nula sea cierta. En un intervalo de confianza, esto se traduce en un rango de valores para el parámetro que sería "plausible" dada la muestra.
+
+### Ejemplo
+
+```{r}
+
+# Crear una muestra
+set.seed(123)
+sample_data <- rnorm(100, mean = 0, sd = 1)
+
+# Prueba de hipótesis
+t_test <- t.test(sample_data, mu = 0)
+
+# Intervalo de confianza
+conf_int <- t_test$conf.int
+
+# Resultados
+print(paste("Valor p:", t_test$p.value))
+print(paste("Intervalo de confianza:", conf_int[1], "a", conf_int[2]))
+
+```
+
+
+
+## Procedimiento de Prueba de hipótesis
+En este punto entregamos un resumen breve de lo que sería realizar una prueba de hipótesis :
+
+1. Plantear las Hipótesis Nula y Alternativa.<br>
+2. Seleccionar el Nivel de Significancia (α).<br>
+3. Elegir la Prueba Adecuada y Calcular el Estadístico de Prueba.<br>
+4. Calcular el Valor p.<br>
+5. Tomar una Decisión: Si el valor p es menor que α, rechazar la hipótesis nula.<br>
+
+
+El como elegir una prueba es algo que se verá en las siguientes clases.
+
+
+
+# Pruebas sobre la media de una distribución normal, varianza conocida.
+
+
+## Pruebas de hipótesis sobre la media.
+
+Cuando la varianza de la población es conocida, puedes realizar pruebas de hipótesis sobre la media poblacional $\mu$ usando una distribución normal estándar. La estadística de prueba se calcula como:$$Z = \frac{\bar{X} - \mu }{\frac{\sigma}{\sqrt{n}}}$$ donde $\bar{X}$ es la media de la muestra, $\mu$ la media bajo la hipótesis nula, $\sigma$ es la desviación estándar conocida de la población, y $n$ es el tamaño de la muestra.
+
+
+## Error de Tipo II y Elección del Tamaño de la Muestra
+
+1. Error de Tipo II: Como ya sabemos este error ocurre cuando no rechazas la hipótesis nula cuando deberías haberlo hecho (la hipótesis nula es falsa, pero no la rechazas). La probabilidad de cometer este error se denota por$\beta$ 
+
+2. Potencia de la Prueba: La potencia es la probabilidad de rechazar correctamente la hipótesis nula cuando la alternativa es verdadera, y se calcula como $1 - \beta$. (si quieres saber más de esto investiga sobre el poder estadístico)
+
+3. Tamaño de la Muestra: La elección del tamaño de la muestra afecta tanto al error tipo I (denotado por $\alpha$) como al tipo II.  Aumentar el tamaño de la muestra aumenta la potencia de la prueba. 
+
+
+## Prueba de Muestra Grande
+Cuando se tiene una muestra grande (por lo general,$n \geq 30$) , incluso si no sabes la varianza de la población, puedes utilizar la desviación estándar de la muestra (s) para aproximar la desviación estándar de la población y realizar la prueba como si la varianza fuera conocida. La razón es que, por el teorema del límite central, la distribución de la media de la muestra estará aproximadamente normal.
+
+
+
+### Ejemplo
+
+Supongamos que deseas probar si la media de una población es 50, y tienes una muestra con media 52 y varianza conocida 4, y tamaño de muestra 100:
+
+```{r}
+mu <- 50  # Media bajo la hipótesis nula
+x_bar <- 52 # Media de la muestra
+sigma <-  # Desviación estándar conocida de la población (cambiar de 3 a 10) para obtener distintos p valor
+n <- 100 # Tamaño de la muestra
+
+# Estadística de prueba Z
+z <- (x_bar - mu) / (sigma / sqrt(n))
+
+# Valor p para una prueba bilateral
+p_value <- 2 * (1 - pnorm(abs(z)))
+
+# Resultados
+print(paste("Estadístico de prueba Z:", z))
+print(paste("Valor p:", p_value))
+
+```
+Con estos cambios, el valor p debería ser mayor y reflejar mejor la significancia estadística de la diferencia observada.

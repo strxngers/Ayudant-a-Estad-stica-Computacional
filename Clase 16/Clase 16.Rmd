@@ -4,7 +4,7 @@ author: |
   | Gaspar Catalan Aguilera
   | Manuel Villalobos Cid
   | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
-bibliography: references.bib  
+bibliography: ../recursos/references.bib  
 output:
   rmdformats::readthedown:
     highlight: kate
@@ -16,7 +16,7 @@ output:
     toc_float:
       collapsed: no
       smooth_scroll: no
-css: custom.css
+css: ../recursos/custom.css
 ---
 
 ```{r setup, include=FALSE}
@@ -40,7 +40,7 @@ text-align: justify;}
 </style>
 
 ```{r, echo=FALSE}
-htmltools::img(src = knitr::image_uri("logo.png"), 
+htmltools::img(src = '../recursos/logo.png',
                alt = 'logo', 
                style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
 library(ggplot2)

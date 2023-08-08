@@ -1,0 +1,198 @@
+---
+title: "Pruebas de Hipótesis para una sóla Muestra (Parte 2)"
+author: | 
+  | Gaspar Catalan Aguilera
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
+bibliography: ../recursos/references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: ../recursos/custom.css
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = '../recursos/logo.png', 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+_*En el siguiente RMD se encuentran definiciones y ejemplos adaptados a su uso en R, del libro guía del curso "APPLIED STATISTICS AND PROBABILITY FOR ENGINEERS" por Douglas C. Montogomery*_
+
+
+<!-- #=========================== -->
+<!-- 1.Pruebas en una proporción de la población. -->
+<!-- #=========================== -->
+
+#  Pruebas en una proporción de la población.
+Una proporción es una fracción, ratio o porcentaje que representa una parte de un todo. En el contexto de las pruebas de hipótesis, a menudo estamos interesados en hacer inferencias sobre una proporción poblacional particular, como el porcentaje de votantes que apoyan a un candidato o la fracción de productos defectuosos en un lote.
+## Pruebas en muestras grandes de la población
+Cuando se trabaja con proporciones, se pueden aplicar pruebas de hipótesis para determinar si una muestra observada difiere significativamente de una proporción poblacional esperada o conocida.
+
+**Pasos para realizar la prueba : **
+
+1. **Definir las Hipótesis :** Establecer las hipótesis nula y alternativa en términos de la proporción poblacional ($p$). Por ejemplo, $H_0: p = 0.5$ y $H_a: p ≠ 0.5$
+
+2. **Calcular la Estadística de Prueba:** Usar la proporción de la muestra ($\hat{p}$) y el tamaño de la muestra ($n$) para calcular el Z-score.
+
+3. **Determinar el valor p :**  omparar la estadística de prueba con una distribución normal estándar para encontrar el valor $p$.
+
+4.**Tomar una Decisión :** Basándose en el valor $p$ y el nivel de significancia $\alpha$, decidir si rechazar o no la hipótesis nula.
+
+## Error tipo II y elección de la muestra.
+
+El tamaño de la muestra y la proporción esperada en la población son factores cruciales que afectan tanto al error tipo II como al tipo I en una prueba de hipótesis. Un tamaño de muestra adecuado asegura que la prueba tenga suficiente potencia para detectar diferencias significativas en las proporciones cuando existen.
+
+### Ejemplo
+Supongamos que quieres probar si una moneda es justa. La proporción poblacional esperada para una moneda justa es 0.5. Aquí tienes un ejemplo de cómo realizar esta prueba en R:
+
+```{r}
+
+muestra <- rbinom(100, 1, 0.5) # Simula 100 lanzamientos de una moneda justa
+proporcion_muestra <- mean(muestra)
+proporcion_poblacional <- 0.5
+n <- length(muestra)
+
+z_score <- (proporcion_muestra - proporcion_poblacional) / sqrt((proporcion_poblacional * (1 - proporcion_poblacional)) / n)
+p_valor <- 2 * (1 - pnorm(abs(z_score)))
+
+if (p_valor < 0.05) {
+  print("Rechazar la hipótesis nula")
+} else {
+  print("No rechazar la hipótesis nula")
+}
+
+```
+Este script realizará la prueba de hipótesis para la proporción, utilizando una muestra simulada de lanzamientos de moneda.
+
+Aunque el término "proporción" se aplica específicamente a este contexto, en realidad, la proporción en una muestra binaria es equivalente a la media de la muestra para datos codificados como 0 y 1.
+
+En el ejemplo, la variable muestra es una muestra binaria de lanzamientos de moneda, donde los valores son 0 o 1. La proporción de la muestra de unos (caras, por ejemplo) es la suma de los unos dividida por el tamaño de la muestra, lo cual también es la media de la muestra.
+
+
+<!-- #=========================== -->
+<!-- 2.Bondad de ajuste: Chi-squares. -->
+<!-- #=========================== -->
+
+#  Bondad de ajuste: Chi-squares.
+
+La prueba de bondad de ajuste Chi-cuadrado es un procedimiento estadístico utilizado para determinar si una muestra de datos se ajusta a una distribución teórica esperada. Es útil para probar si la frecuencia observada de categorías en una variable categórica coincide con lo que esperaríamos bajo una suposición específica.
+
+##Fórmula
+La estadística de Chi-cuadrado se calcula usando la fórmula: $$X^2 = \frac{(O_i-E_i)^2}{E_i}$$ donde,
+
+(1) $O_i$ Frecuencia observada de la categoría $i$
+(2) $R_i$ Frecuencia esperada de la categoría $i$
+## Ejemplo
+
+Supongamos que tienes una moneda y quieres probar si está equilibrada. Lanzas la moneda 100 veces y obtienes 40 caras y 60 cruces. Quieres comparar esto con la expectativa de 50 caras y 50 cruces.
+
+```{r}
+# Frecuencias observadas
+observados <- c(40, 60)
+
+# Frecuencias esperadas
+esperados <- c(50, 50)
+
+# Realizar la prueba Chi-cuadrado
+resultado <- chisq.test(observados, p = esperados / sum(esperados))
+
+# Mostrar el resultado
+print(resultado)
+
+```
+Si el valor p asociado con la estadística de Chi-cuadrado es menor que el nivel de significancia (por ejemplo, 0.05), entonces rechazarías la hipótesis nula de que las frecuencias observadas y esperadas son iguales. En este caso, concluyes que la moneda no está equilibrada.
+
+En general, esta prueba es muy útil para comparar las frecuencias observadas en diferentes categorías con las frecuencias que esperaríamos bajo ciertas suposiciones o teorías, y es una herramienta común en muchas áreas de investigación.
+
+
+<!-- #=========================== -->
+<!-- 3.Pruebas no paramétricas. -->
+<!-- #=========================== -->
+
+#  Pruebas no paramétricas
+Las pruebas no paramétricas son métodos estadísticos que no hacen supuestos sobre la distribución subyacente de los datos. Se utilizan cuando los requisitos de las pruebas paramétricas no se cumplen, como en casos en los que los datos no son normalmente distribuidos o las varianzas no son iguales.
+
+Estas pruebas son especialmente útiles cuando se trabaja con datos ordinales o nominales.
+
+
+## Prueba del signo.
+
+La prueba del signo es una prueba no paramétrica utilizada para probar la mediana de una distribución. Es particularmente útil cuando tienes una pequeña muestra de datos y no puedes asumir una distribución normal.
+
+### Ejemplo
+Una compañía de chocolates quiere lanzar un nuevo sabor al mercado y desea compararlo con su chocolate más vendido. Se organiza una degustación con 20 participantes, cada uno de los cuales prueba ambos chocolates en un orden aleatorio antes de elegir su favorito.De los 20 participantes, 7 prefieren el nuevo sabor de chocolate, mientras que los demás prefieren el sabor más vendido. Con un nivel de significancia de 0.05, ¿podemos rechazar la idea de que los dos chocolates son igualmente preferidos?
+```{r}
+resultado <- binom.test(7, 20)
+print(resultado)
+
+```
+
+Con un nivel de significancia de 0.05, el valor p es 0.2637, lo cual es mayor que el nivel de significancia. Por lo tanto, NO rechazamos la idea de que los dos chocolates son igualmente preferidos. La muestra no proporciona suficiente evidencia para sugerir una preferencia significativa entre los dos chocolates.
+
+
+## Prueba de Wilcoxon.
+
+La prueba de Wilcoxon se puede utilizar de dos formas: la prueba de suma de rangos de Wilcoxon (para comparar dos muestras independientes) y la prueba de rangos con signo de Wilcoxon (para comparar dos muestras relacionadas). Se utiliza para comparar las medias o medianas entre dos grupos.
+
+### Ejemplo 1 Prueba de suma de rangos de Wilcoxon
+
+En este caso tendríamos 2 grupos independientes :
+
+```{r}
+grupo1 <- c(12, 15, 14, 10, 13)
+grupo2 <- c(20, 21, 19, 18, 22)
+resultado <- wilcox.test(grupo1, grupo2)
+print(resultado)
+
+```
+
+### Ejemplo 2 Prueba de rangos con signo de Wilcoxon
+
+Y ahora dos grupos pareados,
+
+```{r}
+antes <- c(10, 12, 14, 9, 11)
+despues <- c(13, 10, 19, 8, 15)
+resultado <- wilcox.test(antes, despues, paired = TRUE)
+print(resultado)
+
+
+```
+
+En ambos casos, un valor p pequeño te llevaría a rechazar la hipótesis nula de que las medias o medianas son iguales entre los grupos.
+
+**NOTA** : si observas atentamente lo que diferencia un test de otro es el parámetro paired que por defecto está como FALSE
+
+
+Las pruebas no paramétricas son herramientas valiosas cuando no se pueden cumplir los supuestos de las pruebas paramétricas. La prueba del signo es útil para probar medianas, mientras que la prueba de Wilcoxon se utiliza para comparar medias o medianas entre dos grupos, ya sea independientes o relacionados. Estas pruebas ofrecen flexibilidad y robustez, especialmente cuando se trabaja con muestras pequeñas o datos que no cumplen con las suposiciones de normalidad y homogeneidad de varianza.
