@@ -1,0 +1,217 @@
+---
+title: "Pruebas de Hipótesis para una sóla Muestra (Parte 4)"
+author: | 
+  | Gaspar Catalan Aguilera
+  | Manuel Villalobos Cid
+  | Deparamento de Ingeniería Informática, Universidad de Santiago de Chile
+bibliography: ../recursos/references.bib  
+output:
+  rmdformats::readthedown:
+    highlight: kate
+  html_document:
+    fig_caption: yes
+    number_sections: yes
+    theme: yeti
+    toc: yes
+    toc_float:
+      collapsed: no
+      smooth_scroll: no
+css: ../recursos/custom.css
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<style>
+body {
+text-align: justify;}
+
+
+#content{
+    max-width: 2000px;
+    margin-left:300px !important;
+}
+
+#table-of-contents{
+    width: 600px% !important;
+}
+
+</style>
+
+```{r, echo=FALSE}
+htmltools::img(src = '../recursos/logo.png', 
+               alt = 'logo', 
+               style = 'position:absolute; top:0; left:80%; padding:0px;height:155px;width:150px')
+```
+
+_*En el siguiente RMD se encuentran definiciones y ejemplos adaptados a su uso en R, del libro guía del curso "APPLIED STATISTICS AND PROBABILITY FOR ENGINEERS" por Douglas C. Montogomery*_
+
+
+<!-- #=========================== -->
+<!-- 1.Evaluación de supuestos paramétricos. -->
+<!-- #=========================== -->
+
+# Evaluación de supuestos paramétricos.
+
+
+Anteriormente ya hemos visto que la estadística paramétrica opera bajo ciertos supuestos sobre las características de las poblaciones de las cuales se extraen las muestras. Tales como la normalidad, varianza constante, independencia, etc., son cruciales, ya que si no se cumplen, los resultados de las pruebas paramétricas pueden ser incorrectos. Por lo tanto, es importante evaluar y validar estos supuestos antes de realizar pruebas paramétricas. Las siguientes secciones detallan algunos de los métodos, para evaluar normalidad :
+
+## Pruebas de contraste de normalidad
+Uno de los supuestos más comunes en muchos análisis estadísticos es que los datos provienen de una distribución normal. Para evaluar este supuesto, se pueden aplicar varias pruebas de contraste de normalidad, como:
+
+(1)***Shapiro-Wilk:***
+
+**Uso**: Probar si una muestra proviene de una población normalmente distribuida.<br>
+**Características**: Es una de las pruebas más potentes y se utiliza ampliamente para comprobar la normalidad.<br><br><br>
+(2)***Lillie (Kolmogorov-Smirnov):***
+
+**Uso**: Probar si una muestra se ajusta a una distribución teórica específica (por ejemplo, normal).<br>
+**Características**: Menos potente que algunas otras pruebas, pero puede usarse con cualquier distribución continua.<br><br><br>
+(3)***Anderson-Darling:***
+
+**Uso**: Similar a la prueba de Shapiro-Wilk, también prueba la normalidad.<br>
+**Características**: Da más peso a las colas de la distribución, por lo que puede ser más sensible a las desviaciones en las colas.<br><br><br>
+(4)***Cramer-von Mises:***
+
+**Uso**: Probar si una muestra proviene de una población con una distribución específica.<br>
+**Características**: Similar a Anderson-Darling, pero menos sensible a las desviaciones en las colas.<br><br><br>
+(5)***Pearson Chi-Square Test:***
+
+**Uso**: Compara la distribución observada de una variable categórica con la distribución teórica o esperada.<br>
+**Características**: Útil para probar la independencia o la homogeneidad en una tabla de contingencia.<br><br><br>
+(6)***Shapiro-Francia Test:***
+
+**Uso**: Una variación de la prueba de Shapiro-Wilk, diseñada para probar la normalidad.<br>
+**Características**: A veces se prefiere a la prueba de Shapiro-Wilk para muestras grandes, aunque generalmente es menos potente.<br><br><br>
+
+
+```{r}
+library("nortest")
+datos <- data.frame(x = rnorm(1000))
+shapiro.test(datos$x)$p.value # Shapiro-Wilk
+lillie.test(datos$x)$p.value  # Lillie (Kolmogorov-Smirnov)
+ad.test(datos$x)$p.value      # Anderson-Darling
+cvm.test(datos$x)$p.value     # Cramer-von Mises
+pearson.test(datos$x)$p.value # Pearson chi-square
+sf.test(datos$x)$p.value      # Shapiro-Francia
+
+
+```
+
+## Gráficos QQ
+
+Los gráficos QQ son una herramienta gráfica poderosa para evaluar si una muestra proviene de una distribución específica, como la normal. En un gráfico QQ, los cuantiles de la muestra se trazan contra los cuantiles de una distribución teórica. Si los puntos en el gráfico caen aproximadamente en una línea recta, es una indicación de que la muestra sigue la distribución teórica.
+
+```{r}
+sample_data <- rnorm(100) # Generar datos normales
+qqnorm(sample_data)       # Crear el gráfico QQ
+qqline(sample_data)       # Agregar línea de referencia
+
+```
+Es posible agregar una banda de confianza alrededor de la línea de referencia en un gráfico QQ para ayudar a evaluar visualmente si los datos se desvían significativamente de la distribución teórica.
+
+```{r}
+
+library(car)
+datos <- rnorm(100)
+qqPlot(datos, main = "Gráfico QQ con banda de confianza")
+
+
+## o tambien con la libreria ggpubr
+
+# Cargar los paquetes necesarios
+library(ggpubr)
+
+# Generar algunos datos aleatorios normalmente distribuidos
+datos <- rnorm(100)
+
+# Crear el gráfico QQ usando ggqqplot
+ggqqplot(datos, ylab = "Cuantiles de datos", xlab = "Cuantiles teóricos")
+
+
+```
+
+En clases, vieron 5 casos de los gráficos Q-Q, de los cuales te presentamos un ejemplo por cada uno a continuación:
+
+1. Normalidad
+Si los datos siguen una distribución normal, los puntos en el gráfico QQ caerán aproximadamente en una línea recta a 45 grados.<br>
+
+2. Desplazada a la Derecha (Right-skewed)
+Si los datos están sesgados hacia la derecha, los puntos en la parte superior derecha del gráfico QQ se alejarán de la línea.<br>
+
+3. Desplazada a la Izquierda (Left-skewed)
+Si los datos están sesgados hacia la izquierda, los puntos en la parte inferior izquierda del gráfico QQ se alejarán de la línea.<br>
+
+4. Datos Poco Dispersos (Under-dispersed data)
+Los datos poco dispersos tendrán menos variabilidad y se mostrarán más cerca de la línea en el gráfico QQ.<br>
+
+5. Datos Muy Dispersos (Over-dispersed data)
+Los datos muy dispersos tendrán más variabilidad y se alejarán más de la línea en el gráfico QQ.<br>
+
+```{r}
+
+set.seed(123)
+datos_normales <- rnorm(100)
+ggqqplot(datos_normales, title = "Caso 1: Normalidad")
+
+datos_right_skewed <- rexp(100)
+ggqqplot(datos_right_skewed, title = "Caso 2: Desplazada a la Derecha")
+
+datos_left_skewed <- -rexp(100)
+ggqqplot(datos_left_skewed, title = "Caso 3: Desplazada a la Izquierda")
+
+datos_under_dispersed <- rbinom(100, size = 1, prob = 0.5)
+ggqqplot(datos_under_dispersed, title = "Caso 4: Datos Poco Dispersos")
+
+datos_over_dispersed <- rlnorm(100)
+ggqqplot(datos_over_dispersed, title = "Caso 5: Datos Muy Dispersos")
+```
+<!-- #=========================== -->
+<!-- 2.Pruebas de contraste para homocedasticidad. -->
+<!-- #=========================== -->
+
+# Pruebas de contraste para homocedasticidad.
+
+La homocedasticidad se refiere a la igualdad de varianzas en diferentes grupos. Es un supuesto común en muchos métodos estadísticos, incluyendo la regresión lineal. A continuación mostramos varios ejemplos de pruebas para la homocedasticidad y contextos en los cuales utilizarlos :
+
+
+
+
+1. ***Prueba de Barlett*** : La prueba de Bartlett es una prueba de significancia estadística para comparar si varias muestras tienen la misma varianza. Es sensible a la normalidad de los datos.
+
+
+2. ***Prueba de Levene*** : La prueba de Levene es una alternativa a la prueba de Bartlett y es menos sensible a la normalidad de los datos. Puede ser realizada con la función leveneTest del paquete car.
+
+
+3. ***Prueba de Breusch-Pagan*** : La prueba de Breusch-Pagan es utilizada en el contexto de la regresión lineal para probar la homocedasticidad de los errores. Puede realizarse con la función bptest del paquete lmtest.
+
+
+
+```{r}
+set.seed(123)
+grupo1 <- rnorm(100)
+grupo2 <- rnorm(100, sd = 2)
+grupo3 <- rnorm(100, sd = 3)
+
+# Prueba de Barlett
+bartlett.test(list(grupo1, grupo2, grupo3))
+
+
+# Prueba de Levene
+leveneTest(y = c(grupo1, grupo2, grupo3), group = factor(rep(1:3, each=100)))
+
+
+# Prueba de Breusch-Pagan
+library(lmtest)
+modelo <- lm(grupo1 ~ grupo2 + grupo3)
+bptest(modelo)
+```
+
+
+
+En todas estas pruebas, un valor p pequeño (por ejemplo, menor que 0.05) sugiere evidencia en contra de la homocedasticidad, lo que significa que las varianzas no son iguales en los grupos. Un valor p grande sugiere que no hay suficiente evidencia para rechazar la igualdad de varianzas.
+
+Cada una de estas pruebas tiene sus propias suposiciones y aplicaciones, por lo que la elección de la prueba adecuada depende del contexto de tu análisis y de los datos.

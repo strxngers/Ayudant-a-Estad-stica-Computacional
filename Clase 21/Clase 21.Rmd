@@ -1,5 +1,5 @@
 ---
-title: "Pruebas de Hipótesis para una sóla Muestra (Parte 2)"
+title: "Pruebas de Hipótesis para una sóla Muestra (Parte 3)"
 author: | 
   | Gaspar Catalan Aguilera
   | Manuel Villalobos Cid
